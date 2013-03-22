@@ -1,0 +1,9 @@
+target/
+*.class
+.idea/
+*.iml
+.DS_Store
+.classpath
+wesplit.eml
+wesplit.userlibraries
+lib/
