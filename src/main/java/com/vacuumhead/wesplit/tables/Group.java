@@ -13,7 +13,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name="GROUP")
+@Table(name="GROUP_TABLE")
 public class Group implements Serializable {
     @Id
     @Column(name="GROUP_ID")
