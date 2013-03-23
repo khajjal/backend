@@ -70,7 +70,7 @@ public class SessionManager {
                 new HttpHeaders(), HttpStatus.OK);
 
     }
-        @RequestMapping(value = "/checkAlreadyLogged/{user}", method = RequestMethod.GET)
+    @RequestMapping(value = "/checkAlreadyLogged/{user}", method = RequestMethod.GET)
     public
     @ResponseBody
     ResponseEntity<String> checkAlreadyLogged(@PathVariable("user") String user, HttpServletRequest request) {
