@@ -2,6 +2,7 @@ package com.vacuumhead.wesplit.tables;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name="GROUP_TABLE")
+@Table(name="GROUP")
 public class Group implements Serializable {
     @Id
     @Column(name="GROUP_ID")
@@ -23,7 +24,7 @@ public class Group implements Serializable {
     private String groupName;
 
     @ManyToMany(mappedBy = "groupList",cascade = CascadeType.ALL)
-    List<User> userList;
+    private List<User> userList=new ArrayList<User>();
 
     public Group(String groupName) {
         this.groupName = groupName;

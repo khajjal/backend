@@ -14,18 +14,11 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name="USER_TABLE")
+@Table(name="USER")
 public class User implements Serializable {
     @Id
     @Column(name="USER_ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int userId=1;
-
-    @Column(name="USER_NAME")
-    private String userName;
-
-    @Column(name="PASSWORD")
-    private String password;
+    private int userId;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "MEMBERSHIP", schema = "wesplit_ddb",
@@ -33,6 +26,8 @@ public class User implements Serializable {
             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
     private List<Group> groupList=new ArrayList<Group>();
 
+    public User() {
+    }
     public List<Group> getGroupList() {
         return groupList;
     }
@@ -41,35 +36,11 @@ public class User implements Serializable {
         this.groupList = groupList;
     }
 
-    public User( String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-    }
-
-    public User() {
-    }
-
     public int getUserId() {
         return userId;
     }
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
