@@ -3,6 +3,7 @@ package com.vacuumhead.wesplit.application;
 import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.constants.SessionConstants;
 import com.vacuumhead.wesplit.dao.IUserAccountDaoOriginal;
+import com.vacuumhead.wesplit.dao.UserAccountDao;
 import com.vacuumhead.wesplit.dao.UserAccountDaoOriginal;
 import com.vacuumhead.wesplit.responseobject.SessionWrapper;
 
@@ -21,8 +22,8 @@ import java.util.Map;
 public class SessionApplicationService implements ISessionApplicationService {
     private IUserAccountDaoOriginal userAccountDao;
 
-    public SessionApplicationService() {
-        userAccountDao = new UserAccountDaoOriginal();
+    public SessionApplicationService(UserAccountDaoOriginal userAccountDao) {
+        this.userAccountDao = userAccountDao;
     }
 
     public AccountCodes createUser(String user, String password) {
