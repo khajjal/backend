@@ -68,7 +68,7 @@ public class SessionDao implements ISessionDao {
 
     public AccountCodes checkCredentials(String username, String password) {
         Login loginUser = new Login(username, password);
-        Login result = entityManager.find(Login.class, loginUser.getAccount_id());
+        Login result = entityManager.find(Login.class, loginUser.getAccountId());
 
         return result != null ? AccountCodes.CREDENTIALS_VALID : AccountCodes.CREDENTIALS_INVALID;
     }
