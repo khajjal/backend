@@ -13,7 +13,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name="GROUP")
+@Table(name="GROUP_TABLE")
 public class Group implements Serializable {
     @Id
     @Column(name="GROUP_ID")
@@ -25,6 +25,9 @@ public class Group implements Serializable {
 
     @ManyToMany(mappedBy = "groupList",cascade = CascadeType.ALL)
     private List<User> userList=new ArrayList<User>();
+
+    @OneToMany(mappedBy = "associatedGroup",cascade = CascadeType.ALL)
+    private List<Bill> billList=new ArrayList<Bill>();
 
     public Group(String groupName) {
         this.groupName = groupName;

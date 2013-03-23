@@ -22,8 +22,9 @@ public class Bill implements Serializable {
     @Column(name="BILL_ID")
     private int billId=1;
 
-    @Column(name="BILL_GROUP")
-    private Group group;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Group associatedGroup;
 
     @ElementCollection(targetClass=com.vacuumhead.wesplit.tables.User.class)
     @JoinTable(
@@ -56,12 +57,12 @@ public class Bill implements Serializable {
         this.billId = billId;
     }
 
-    public Group getGroup() {
-        return group;
+    public Group getAssociatedGroup() {
+        return associatedGroup;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    public void setAssociatedGroup(Group associatedGroup) {
+        this.associatedGroup = associatedGroup;
     }
 
     public Map<User, Double> getContributorMap() {
