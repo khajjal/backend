@@ -11,29 +11,22 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name = "login", uniqueConstraints = {
+@Table(name = "user_table", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"username", "account_id"})
 })
 public class Login implements Serializable {
     @Id
-    @Column(name="account_id")
-    private String account_id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "account_id")
+    private Integer accountId = 1;
 
-    @Column(name="username")
-    private String username;
-
-    @Column(name="password")
-    private String password;
-
-    public Login() {
+    public Integer getAccountId() {
+        return accountId;
     }
 
-    public String getAccount_id() {
-        return account_id;
-    }
-
-    public void setAccount_id(String account_id) {
-        this.account_id = account_id;
+    public Login(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
 
     public String getUsername() {
@@ -52,11 +45,11 @@ public class Login implements Serializable {
         this.password = password;
     }
 
-    public Login(String username, String password) {
+    @Column(name = "username")
+    private String username;
 
-        this.username = username;
-        this.password = password;
-        this.account_id = username + password;
-    }
+    @Column(name = "password")
+    private String password;
+
 
 }
