@@ -1,8 +1,13 @@
 package com.vacuumhead.wesplit.application;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
+import com.vacuumhead.wesplit.constants.SessionConstants;
 import com.vacuumhead.wesplit.dao.ISessionDao;
 import com.vacuumhead.wesplit.dao.SessionDao;
+import com.vacuumhead.wesplit.responseobject.SessionWrapper;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * Created with IntelliJ IDEA.
@@ -50,6 +55,19 @@ public class SessionApplicationService implements ISessionApplicationService {
             return AccountCodes.USER_NOT_LOGGED_IN;
         }
         return sessionDao.logoutUser(username);
+    }
+
+    public SessionWrapper createSession(HttpServletRequest request) {
+        request.getSession().invalidate();
+        HttpSession session = request.getSession();
+
+        session.setMaxInactiveInterval(SessionConstants.maxInactiveTime);
+        session.setAttribute("creationTime", session.getCreationTime());
+        session.setAttribute("lastAccessTime", session.getLastAccessedTime());
+
+        SessionWrapper sessionWrapper = new SessionWrapper(session);
+
+        return sessionWrapper;
     }
 
     public AccountCodes checkAlreadyLogged(String username) {

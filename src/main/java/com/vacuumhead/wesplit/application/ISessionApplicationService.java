@@ -1,6 +1,9 @@
 package com.vacuumhead.wesplit.application;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
+import com.vacuumhead.wesplit.responseobject.SessionWrapper;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,4 +19,6 @@ public interface ISessionApplicationService {
     AccountCodes loginUser(String username, String password);
     AccountCodes checkAlreadyLogged(String username);
     AccountCodes logoutUser(String username);
+
+    SessionWrapper createSession(HttpServletRequest request);
 }

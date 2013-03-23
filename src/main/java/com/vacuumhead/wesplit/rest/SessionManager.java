@@ -1,8 +1,12 @@
 package com.vacuumhead.wesplit.rest;
 
+import com.google.gson.Gson;
 import com.vacuumhead.wesplit.application.ISessionApplicationService;
 import com.vacuumhead.wesplit.application.SessionApplicationService;
 import com.vacuumhead.wesplit.constants.AccountCodes;
+import com.vacuumhead.wesplit.constants.HttpResponseCode;
+import com.vacuumhead.wesplit.responseobject.ResponseWrapper;
+import com.vacuumhead.wesplit.responseobject.SessionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/session")
 public class SessionManager {
 
     @Autowired
@@ -34,6 +38,21 @@ public class SessionManager {
         this.sessionApplicationService = new SessionApplicationService();
     }
 
+    @RequestMapping(value = "/createSession", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<String> createSession(HttpServletRequest request) {
+
+        SessionWrapper sessionObject = sessionApplicationService.createSession(request);
+
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, sessionObject);
+        String responseJson = new Gson().toJson(responseWrapper);
+        return new ResponseEntity<String>(responseJson, new HttpHeaders(), HttpStatus.OK);
+
+    }
+
+
+
 
     @RequestMapping(value = "/createUser/{user}/{password}", method = RequestMethod.GET)
     public
@@ -42,7 +61,7 @@ public class SessionManager {
 
         AccountCodes responseCode = sessionApplicationService.createUser(user, password);
 
-        return new ResponseEntity<String>(responseCode.toString(),
+        return new ResponseEntity<String>(request.getSession().getId() + " .. " + request.getSession().getLastAccessedTime(),
                 new HttpHeaders(), HttpStatus.OK);
 
     }
