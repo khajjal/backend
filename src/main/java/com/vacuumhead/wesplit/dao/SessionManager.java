@@ -1,7 +1,11 @@
 package com.vacuumhead.wesplit.dao;
 
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.lang.reflect.Method;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,5 +27,30 @@ public class SessionManager {
     public EntityManagerFactory getEntityManager() {
         EntityManagerFactory factory = Persistence.createEntityManagerFactory("wesplit");
         return factory;
+    }
+
+
+    public Object daoExecution(ProceedingJoinPoint point) throws Throwable {
+        Object retVal = null;
+
+        MethodSignature signature = (MethodSignature) point.getSignature();
+        Method method = signature.getMethod();
+
+        try {
+            System.out.println("Calling function in DAO" + method + "(" + signature + ")");
+
+            long startTime = System.currentTimeMillis();
+            retVal = point.proceed();
+            long stopTime = System.currentTimeMillis();
+
+            System.out.println("Returning from function in DAO " + method + "(" + signature + ")"
+                    + ". Took " + String.valueOf(stopTime - startTime) + " ms.");
+        } catch (Throwable throwable) {
+
+            System.out.println("calling in DAO " + point.toString() + " threw exception = ");
+        }
+
+        return retVal;
+
     }
 }
