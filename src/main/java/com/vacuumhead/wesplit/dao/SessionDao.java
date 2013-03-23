@@ -2,7 +2,8 @@ package com.vacuumhead.wesplit.dao;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.tables.Loggedin;
-import com.vacuumhead.wesplit.tables.Login;
+import com.vacuumhead.wesplit.tables.UserAccount;
+import com.vacuumhead.wesplit.tables.UserAccount;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -19,16 +20,16 @@ public class SessionDao implements ISessionDao {
 
     public AccountCodes checkExistUser(String username) {
 
-        TypedQuery<Login> query = entityManager.createQuery("select l from Login l where username = :username", Login.class);
+        TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :username", UserAccount.class);
         query.setParameter("username", username);
-        List<Login> resultSet =  query.getResultList();
+        List<UserAccount> resultSet =  query.getResultList();
 
         return resultSet.size() > 0 ? AccountCodes.ACCOUNT_ALREADY_EXIST : AccountCodes.ACCOUNT_DOES_NOT_EXIST;
     }
 
     public AccountCodes createUser(String username, String password) {
 
-        Login newUser = new Login(username, password);
+        UserAccount newUser = new UserAccount(username, password);
         entityManager.getTransaction().begin();
         entityManager.persist(newUser);
         entityManager.getTransaction().commit();
@@ -67,8 +68,8 @@ public class SessionDao implements ISessionDao {
     }
 
     public AccountCodes checkCredentials(String username, String password) {
-        Login loginUser = new Login(username, password);
-        Login result = entityManager.find(Login.class, loginUser.getAccount_id());
+        UserAccount loginUser = new UserAccount(username, password);
+        UserAccount result = entityManager.find(UserAccount.class, loginUser.getAccountId());
 
         return result != null ? AccountCodes.CREDENTIALS_VALID : AccountCodes.CREDENTIALS_INVALID;
     }
