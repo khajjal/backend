@@ -21,8 +21,8 @@ import java.util.Map;
 public class SessionApplicationService implements ISessionApplicationService {
     private IUserAccountDao userAccountDao;
 
-    public SessionApplicationService() {
-        userAccountDao = new UserAccountDao();
+    public SessionApplicationService(UserAccountDao userAccountDao) {
+        this.userAccountDao = userAccountDao;
     }
 
     public AccountCodes createUser(String user, String password) {
