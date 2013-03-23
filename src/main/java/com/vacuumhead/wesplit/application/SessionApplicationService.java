@@ -2,8 +2,8 @@ package com.vacuumhead.wesplit.application;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.constants.SessionConstants;
-import com.vacuumhead.wesplit.dao.IUserAccountDao;
-import com.vacuumhead.wesplit.dao.UserAccountDao;
+import com.vacuumhead.wesplit.dao.IUserAccountDaoOriginal;
+import com.vacuumhead.wesplit.dao.UserAccountDaoOriginal;
 import com.vacuumhead.wesplit.responseobject.SessionWrapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +19,10 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public class SessionApplicationService implements ISessionApplicationService {
-    private IUserAccountDao userAccountDao;
+    private IUserAccountDaoOriginal userAccountDao;
 
     public SessionApplicationService() {
-        userAccountDao = new UserAccountDao();
+        userAccountDao = new UserAccountDaoOriginal();
     }
 
     public AccountCodes createUser(String user, String password) {

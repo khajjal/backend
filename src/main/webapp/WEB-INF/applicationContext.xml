@@ -25,7 +25,7 @@
     </beans:bean>
 
 
-    <beans:bean id="sessionDao" class="com.vacuumhead.wesplit.dao.UserAccountDao">
+    <beans:bean id="sessionDao" class="com.vacuumhead.wesplit.dao.UserAccountDaoOriginal">
 
     </beans:bean>
 
