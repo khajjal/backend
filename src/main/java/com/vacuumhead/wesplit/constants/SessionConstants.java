@@ -8,5 +8,5 @@ package com.vacuumhead.wesplit.constants;
  * To change this template use File | Settings | File Templates.
  */
 public class SessionConstants {
-    public static int maxInactiveTime = 10;
+    public static int maxInactiveTime = 100000;
 }

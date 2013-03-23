@@ -23,8 +23,31 @@ public class Group implements Serializable {
     @Column(name="GROUP_NAME")
     private String groupName;
 
-    @ManyToMany(mappedBy = "groupList",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "groupMemberList",cascade = CascadeType.ALL)
     private List<User> userList=new ArrayList<User>();
+
+    @ManyToMany(mappedBy = "groupAdminList",cascade = CascadeType.ALL)
+    private List<User> adminList=new ArrayList<User>();
+
+
+    @OneToMany(mappedBy = "associatedGroup",cascade = CascadeType.ALL)
+    private List<Bill> billList=new ArrayList<Bill>();
+
+    public List<User> getAdminList() {
+        return adminList;
+    }
+
+    public void setAdminList(List<User> adminList) {
+        this.adminList = adminList;
+    }
+
+    public List<Bill> getBillList() {
+        return billList;
+    }
+
+    public void setBillList(List<Bill> billList) {
+        this.billList = billList;
+    }
 
     public Group(String groupName) {
         this.groupName = groupName;

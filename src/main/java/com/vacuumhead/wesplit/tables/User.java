@@ -24,16 +24,30 @@ public class User implements Serializable {
     @JoinTable(name = "MEMBERSHIP", schema = "wesplit_ddb",
             joinColumns = { @JoinColumn(name = "USER_ID")},
             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
-    private List<Group> groupList=new ArrayList<Group>();
+    private List<Group> groupMemberList=new ArrayList<Group>();
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "ADMIN", schema = "wesplit_ddb",
+            joinColumns = { @JoinColumn(name = "USER_ID")},
+            inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
+    private List<Group> groupAdminList=new ArrayList<Group>();
     public User() {
     }
-    public List<Group> getGroupList() {
-        return groupList;
+
+    public List<Group> getGroupMemberList() {
+        return groupMemberList;
     }
 
-    public void setGroupList(List<Group> groupList) {
-        this.groupList = groupList;
+    public void setGroupMemberList(List<Group> groupMemberList) {
+        this.groupMemberList = groupMemberList;
+    }
+
+    public List<Group> getGroupAdminList() {
+        return groupAdminList;
+    }
+
+    public void setGroupAdminList(List<Group> groupAdminList) {
+        this.groupAdminList = groupAdminList;
     }
 
     public int getUserId() {

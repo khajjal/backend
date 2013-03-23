@@ -17,6 +17,14 @@ public class SessionWrapper {
 
     private Map<String, Object> sessionData;
 
+    public Map<String, Object> getSessionData() {
+        return sessionData;
+    }
+
+    public void setSessionData(Map<String, Object> sessionData) {
+        this.sessionData = sessionData;
+    }
+
     public SessionWrapper(HttpSession session) {
         sessionData = new HashMap<String, Object>();
         this.sessionId = session.getId();

@@ -12,12 +12,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -51,7 +49,32 @@ public class SessionManager {
 
     }
 
+    @RequestMapping(value = "/addDataToSession", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    ResponseEntity<String> addDataToSession(@RequestBody String sessionId , HttpServletRequest request) {
 
+        Map dataJson = new Gson().fromJson(sessionId, Map.class);
+        SessionWrapper sessionObject = sessionApplicationService.addDataToSession(request.getSession(), dataJson);
+
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, sessionObject);
+        String responseJson = new Gson().toJson(responseWrapper);
+
+        return new ResponseEntity<String>(responseJson, new HttpHeaders(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getDataFromSession", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<String> getDataFromSession(HttpServletRequest request) {
+
+        SessionWrapper sessionObject = sessionApplicationService.getDataFromSession(request.getSession());
+
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, sessionObject.getSessionData());
+        String responseJson = new Gson().toJson(responseWrapper);
+
+        return new ResponseEntity<String>(responseJson, new HttpHeaders(), HttpStatus.OK);
+    }
 
 
     @RequestMapping(value = "/createUser/{user}/{password}", method = RequestMethod.GET)

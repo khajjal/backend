@@ -3,7 +3,6 @@ package com.vacuumhead.wesplit.dao;
 import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.tables.Loggedin;
 import com.vacuumhead.wesplit.tables.UserAccount;
-import com.vacuumhead.wesplit.tables.UserAccount;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;

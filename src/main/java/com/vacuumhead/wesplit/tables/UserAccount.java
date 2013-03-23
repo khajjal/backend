@@ -28,6 +28,16 @@ public class UserAccount implements Serializable {
     @PrimaryKeyJoinColumn
     private User user;
 
+    private boolean isActive;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
+
     public User getUser() {
         return user;
     }

@@ -4,6 +4,8 @@ import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.responseobject.SessionWrapper;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,4 +23,8 @@ public interface ISessionApplicationService {
     AccountCodes logoutUser(String username);
 
     SessionWrapper createSession(HttpServletRequest request);
+
+    SessionWrapper addDataToSession(HttpSession session, Map dataJson);
+
+    SessionWrapper getDataFromSession(HttpSession session);
 }
