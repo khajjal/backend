@@ -14,12 +14,16 @@ import java.io.Serializable;
 @Table(name = "user_table", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"username", "account_id"})
 })
-public class Login implements Serializable {
+public class UserAccount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "account_id")
     private Integer accountId = 1;
+    @Column(name = "username")
+    private String username;
 
+    @Column(name = "password")
+    private String password;
     public Integer getAccountId() {
         return accountId;
     }
@@ -45,11 +49,7 @@ public class Login implements Serializable {
         this.password = password;
     }
 
-    @Column(name = "username")
-    private String username;
 
-    @Column(name = "password")
-    private String password;
 
 
 }
