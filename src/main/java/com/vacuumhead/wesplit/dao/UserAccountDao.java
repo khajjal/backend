@@ -1,76 +1,53 @@
 package com.vacuumhead.wesplit.dao;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
-import com.vacuumhead.wesplit.tables.Loggedin;
 import com.vacuumhead.wesplit.tables.UserAccount;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
-public class UserAccountDao implements IUserAccountDao {
+/**
+ * Created with IntelliJ IDEA.
+ * User: shuklar
+ * Date: 3/24/13
+ * Time: 1:08 AM
+ * To change this template use File | Settings | File Templates.
+ */
+public class UserAccountDao implements  IUserAccountDao {
 
     private EntityManager entityManager;
 
-    public UserAccountDao() {
-        entityManager = SessionManager.getInstance().getEntityManager().createEntityManager();
+    public UserAccount retriveUserAccountExist(int id) {
+        UserAccount userAccount = null ;
+        entityManager.getTransaction().begin();
+        userAccount = entityManager.find(UserAccount.class , id);
+        entityManager.getTransaction().commit();
+        return userAccount ;
     }
 
-
-    public AccountCodes checkExistUser(String username) {
-
-        TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :username", UserAccount.class);
-        query.setParameter("username", username);
+    public UserAccount retriveUserAccountExist(String userName) {
+        TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :userName", UserAccount.class);
+        query.setParameter("username", userName);
         List<UserAccount> resultSet =  query.getResultList();
-
-        return resultSet.size() > 0 ? AccountCodes.ACCOUNT_ALREADY_EXIST : AccountCodes.ACCOUNT_DOES_NOT_EXIST;
+        return resultSet.size() > 0 ? resultSet.get(0) : null ;
     }
 
-    public AccountCodes createUser(String username, String password) {
-
-        UserAccount newUser = new UserAccount(username, password);
+    public void createUserAccount(UserAccount userAccount) {
         entityManager.getTransaction().begin();
-        entityManager.persist(newUser);
+        entityManager.persist(userAccount);
         entityManager.getTransaction().commit();
-
-        return AccountCodes.ACCOUNT_CREATION_SUCCESSFUL;
     }
 
-    public AccountCodes checkAlreadyLogged(String username) {
-        TypedQuery<Loggedin> query = entityManager.createQuery("from Loggedin l where username = :username", Loggedin.class);
-        query.setParameter("username", username);
-        List<Loggedin> resultSet =  query.getResultList();
-
-        return resultSet.size() > 0 ? AccountCodes.USER_ALREADY_LOGGED_IN: AccountCodes.USER_NOT_LOGGED_IN;
-    }
-
-    public AccountCodes setUserLoggedIn(String username) {
-
-        Loggedin loginUser = new Loggedin(username, true);
+    public void updateUserAccount(UserAccount userAccount) {
         entityManager.getTransaction().begin();
-        entityManager.persist(loginUser);
+        entityManager.merge(userAccount);
         entityManager.getTransaction().commit();
-
-        return AccountCodes.USER_LOGGED_IN;
     }
 
-    public AccountCodes logoutUser(String username) {
-        Loggedin loggedinUser = entityManager.find(Loggedin.class, username);
-        if(loggedinUser == null) {
-            return AccountCodes.USER_NOT_LOGGED_IN;
-        }
+    public void deleteUserAccount(UserAccount userAccount) {
         entityManager.getTransaction().begin();
-        entityManager.remove(loggedinUser);
+        entityManager.remove(userAccount);
         entityManager.getTransaction().commit();
-
-        return AccountCodes.USER_LOGGED_OUT;
     }
-
-    public AccountCodes checkCredentials(String username, String password) {
-        UserAccount loginUser = new UserAccount(username, password);
-        UserAccount result = entityManager.find(UserAccount.class, loginUser.getAccountId());
-
-        return result != null ? AccountCodes.CREDENTIALS_VALID : AccountCodes.CREDENTIALS_INVALID;
-    }
-
 }
