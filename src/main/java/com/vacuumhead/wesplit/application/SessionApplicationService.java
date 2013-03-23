@@ -2,8 +2,8 @@ package com.vacuumhead.wesplit.application;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.constants.SessionConstants;
-import com.vacuumhead.wesplit.dao.ISessionDao;
-import com.vacuumhead.wesplit.dao.SessionDao;
+import com.vacuumhead.wesplit.dao.IUserAccountDao;
+import com.vacuumhead.wesplit.dao.UserAccountDao;
 import com.vacuumhead.wesplit.responseobject.SessionWrapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,10 +17,10 @@ import javax.servlet.http.HttpSession;
  * To change this template use File | Settings | File Templates.
  */
 public class SessionApplicationService implements ISessionApplicationService {
-    private ISessionDao sessionDao;
+    private IUserAccountDao userAccountDao;
 
     public SessionApplicationService() {
-        sessionDao = new SessionDao();
+        userAccountDao = new UserAccountDao();
     }
 
     public AccountCodes createUser(String user, String password) {
@@ -28,11 +28,11 @@ public class SessionApplicationService implements ISessionApplicationService {
         if(checkExistUser(user).equals(AccountCodes.ACCOUNT_ALREADY_EXIST)) {
             return AccountCodes.ACCOUNT_ALREADY_EXIST;
         }
-        return sessionDao.createUser(user, password);
+        return userAccountDao.createUser(user, password);
     }
 
     public AccountCodes checkExistUser(String username) {
-        return sessionDao.checkExistUser(username);
+        return userAccountDao.checkExistUser(username);
     }
 
     public AccountCodes loginUser(String username, String password) {
@@ -43,18 +43,18 @@ public class SessionApplicationService implements ISessionApplicationService {
             return AccountCodes.USER_ALREADY_LOGGED_IN;
         }
 
-        return sessionDao.setUserLoggedIn(username);
+        return userAccountDao.setUserLoggedIn(username);
     }
 
     public AccountCodes checkCredentials(String username, String password) {
-        return sessionDao.checkCredentials(username, password);
+        return userAccountDao.checkCredentials(username, password);
     }
 
     public AccountCodes logoutUser(String username) {
         if(checkAlreadyLogged(username).equals(AccountCodes.USER_NOT_LOGGED_IN)) {
             return AccountCodes.USER_NOT_LOGGED_IN;
         }
-        return sessionDao.logoutUser(username);
+        return userAccountDao.logoutUser(username);
     }
 
     public SessionWrapper createSession(HttpServletRequest request) {
@@ -71,6 +71,6 @@ public class SessionApplicationService implements ISessionApplicationService {
     }
 
     public AccountCodes checkAlreadyLogged(String username) {
-        return sessionDao.checkAlreadyLogged(username);
+        return userAccountDao.checkAlreadyLogged(username);
     }
 }
