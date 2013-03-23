@@ -3,10 +3,10 @@ package com.vacuumhead.wesplit.dao;
 import com.vacuumhead.wesplit.constants.AccountCodes;
 
 /**
- * Created by IntelliJ IDEA.
- * User: pratyushverma
- * Date: 04/02/13
- * Time: 11:33 PM
+ * Created with IntelliJ IDEA.
+ * User: shuklar
+ * Date: 3/24/13
+ * Time: 2:05 AM
  * To change this template use File | Settings | File Templates.
  */
 public interface ISessionDao {
@@ -17,5 +17,4 @@ public interface ISessionDao {
     public AccountCodes setUserLoggedIn(String username);
     public AccountCodes logoutUser(String username);
     public AccountCodes checkCredentials(String username, String password);
-
 }
