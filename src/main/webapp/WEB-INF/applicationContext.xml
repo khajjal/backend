@@ -16,6 +16,8 @@
 
     <!-- Enables the Spring MVC @Controller programming model -->
     <mvc:annotation-driven/>
+    <context:annotation-config/>
+    <aop:aspectj-autoproxy/>
 
 
     <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
@@ -39,12 +41,18 @@
     </beans:bean>
 
     <beans:bean id="groupApplicationService" class="com.vacuumhead.wesplit.application.GroupApplicationService">
-
     </beans:bean>
 
 
-
     <beans:bean id="daoExecution" class="com.vacuumhead.wesplit.dao.SessionManager"/>
+
+
+    <aop:config>
+        <aop:aspect id="daoAspect" ref="daoExecution">
+            <aop:pointcut id="pointCutBefore"  expression="execution(* com.vacuumhead.wesplit.dao.*.*(..))"/>
+            <aop:around method="daoExecution" pointcut-ref="pointCutBefore"/>
+        </aop:aspect>
+    </aop:config>
 
     <!--<aop:config>-->
         <!--<aop:aspect id="daoAspect" ref="daoExecution">-->

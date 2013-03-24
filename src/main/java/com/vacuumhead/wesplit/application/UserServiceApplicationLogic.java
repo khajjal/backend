@@ -2,7 +2,6 @@ package com.vacuumhead.wesplit.application;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.dao.IUserAccountDao;
-import com.vacuumhead.wesplit.dao.UserAccountDao;
 import com.vacuumhead.wesplit.tables.UserAccount;
 
 /**
@@ -16,7 +15,7 @@ public class UserServiceApplicationLogic implements IUserServiceApplicationLogic
 
     private IUserAccountDao userAccountDao;
 
-    public UserServiceApplicationLogic(UserAccountDao userAccountDao) {
+    public UserServiceApplicationLogic(IUserAccountDao userAccountDao) {
         this.userAccountDao = userAccountDao;
     }
 
