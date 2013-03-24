@@ -4,6 +4,8 @@ package com.vacuumhead.wesplit.dao;
 import com.vacuumhead.wesplit.tables.UserAccount;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
@@ -16,13 +18,18 @@ import java.util.List;
  */
 public class UserAccountDao implements  IUserAccountDao {
 
-    private EntityManager entityManager;
+    @PersistenceUnit
+    private EntityManagerFactory emf;
+
+    public void setEmf(EntityManagerFactory emf) {
+        this.emf = emf;
+    }
 
     public UserAccountDao() {
-        this.entityManager = SessionManager.getInstance().getEntityManager().createEntityManager();
     }
 
     public UserAccount retrieveUserAccount(int id) {
+        EntityManager entityManager = emf.createEntityManager();
         UserAccount userAccount = null ;
         entityManager.getTransaction().begin();
         userAccount = entityManager.find(UserAccount.class , id);
@@ -31,6 +38,7 @@ public class UserAccountDao implements  IUserAccountDao {
     }
 
     public UserAccount retrieveUserAccount(String username) {
+        EntityManager entityManager = emf.createEntityManager();
         TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :username", UserAccount.class);
         query.setParameter("username", username);
         List<UserAccount> resultSet =  query.getResultList();
@@ -38,18 +46,21 @@ public class UserAccountDao implements  IUserAccountDao {
     }
 
     public void createUserAccount(UserAccount userAccount) {
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.persist(userAccount);
         entityManager.getTransaction().commit();
     }
 
     public void updateUserAccount(UserAccount userAccount) {
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.merge(userAccount);
         entityManager.getTransaction().commit();
     }
 
     public void deleteUserAccount(UserAccount userAccount) {
+        EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
         entityManager.remove(userAccount);
         entityManager.getTransaction().commit();

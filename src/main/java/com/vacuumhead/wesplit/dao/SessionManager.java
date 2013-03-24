@@ -3,7 +3,7 @@ package com.vacuumhead.wesplit.dao;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import java.lang.reflect.Method;
 
@@ -15,19 +15,6 @@ import java.lang.reflect.Method;
  * To change this template use File | Settings | File Templates.
  */
 public class SessionManager {
-    private static SessionManager ourInstance = new SessionManager();
-
-    public static SessionManager getInstance() {
-        return ourInstance;
-    }
-
-    private SessionManager() {
-    }
-
-    public EntityManagerFactory getEntityManager() {
-        EntityManagerFactory factory = Persistence.createEntityManagerFactory("wesplit");
-        return factory;
-    }
 
 
     public Object daoExecution(ProceedingJoinPoint point) throws Throwable {

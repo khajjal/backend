@@ -46,20 +46,36 @@
 
     <beans:bean id="daoExecution" class="com.vacuumhead.wesplit.dao.SessionManager"/>
 
-
     <aop:config>
         <aop:aspect id="daoAspect" ref="daoExecution">
-            <aop:pointcut id="pointCutBefore"  expression="execution(* com.vacuumhead.wesplit.dao.*.*(..))"/>
+            <aop:pointcut id="pointCutBefore" expression="execution(* com.vacuumhead.wesplit.dao.*.*(..))"/>
             <aop:around method="daoExecution" pointcut-ref="pointCutBefore"/>
         </aop:aspect>
     </aop:config>
 
-    <!--<aop:config>-->
-        <!--<aop:aspect id="daoAspect" ref="daoExecution">-->
-            <!--<aop:pointcut id="daoPointCut" expression="execution(* com.vacuumhead.wesplit.dao.*(..))"/>-->
-            <!--<aop:around pointcut-ref="daoPointCut" method="daoExecution"/>-->
-        <!--</aop:aspect>-->
-    <!--</aop:config>-->
+
+
+    <beans:bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <beans:property name="loadTimeWeaver">
+            <beans:bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>
+        </beans:property>
+    </beans:bean>
+
+    <beans:bean id="myTxManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <beans:property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </beans:bean>
+
+  <aop:config>
+    <aop:pointcut id="allDaoMethods" expression="execution(* com.vacuumhead.wesplit.dao.*.*(..))"/>
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="allDaoMethods"/>
+  </aop:config>
+
+  <tx:advice id="txAdvice" transaction-manager="myTxManager">
+    <tx:attributes>
+      <tx:method name="*" propagation="SUPPORTS" read-only="true"/>
+    </tx:attributes>
+  </tx:advice>
+
 
     <context:component-scan base-package="com.vacuumhead.wesplit"/>
 

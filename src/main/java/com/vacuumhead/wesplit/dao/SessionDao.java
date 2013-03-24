@@ -14,7 +14,7 @@ public class SessionDao implements ISessionDao {
 
     public SessionDao() {
         //this.entityManager = entityManager;
-        entityManager = SessionManager.getInstance().getEntityManager().createEntityManager();
+        entityManager = SessionManager.getInstance().getEntityManager();
     }
 
 
