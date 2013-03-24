@@ -10,7 +10,8 @@ import com.vacuumhead.wesplit.tables.UserAccount;
  * To change this template use File | Settings | File Templates.
  */
 public interface IUserAccountDao {
-    public UserAccount retriveUserAccountExist(String userName);
+    public UserAccount retrieveUserAccount(int id);
+    public UserAccount retrieveUserAccount(String userName);
     public void createUserAccount(UserAccount userAccount);
     public void updateUserAccount(UserAccount userAccount);
     public void deleteUserAccount(UserAccount userAccount);

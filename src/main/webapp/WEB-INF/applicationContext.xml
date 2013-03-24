@@ -25,10 +25,12 @@
     </beans:bean>
 
 
-    <beans:bean id="userAccountDao" class="com.vacuumhead.wesplit.dao.UserAccountDaoOriginal">
+    <beans:bean id="userAccountDao" class="com.vacuumhead.wesplit.dao.UserAccountDao">
     </beans:bean>
 
     <beans:bean id="sessionApplicationService" class="com.vacuumhead.wesplit.application.SessionApplicationService">
+    </beans:bean>
+    <beans:bean id="userServiceApplicationLogic" class="com.vacuumhead.wesplit.application.UserServiceApplicationLogic">
         <beans:constructor-arg name="userAccountDao" ref="userAccountDao"/>
     </beans:bean>
 

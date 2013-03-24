@@ -18,7 +18,8 @@ public class UserAccount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ACCOUNT_ID")
-     private Integer accountId = 1;
+    private Integer accountId = 1;
+
     @Column(name = "USERNAME")
     private String username;
 

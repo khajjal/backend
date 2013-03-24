@@ -18,7 +18,11 @@ public class UserAccountDao implements  IUserAccountDao {
 
     private EntityManager entityManager;
 
-    public UserAccount retriveUserAccountExist(int id) {
+    public UserAccountDao() {
+        this.entityManager = SessionManager.getInstance().getEntityManager().createEntityManager();
+    }
+
+    public UserAccount retrieveUserAccount(int id) {
         UserAccount userAccount = null ;
         entityManager.getTransaction().begin();
         userAccount = entityManager.find(UserAccount.class , id);
@@ -26,9 +30,9 @@ public class UserAccountDao implements  IUserAccountDao {
         return userAccount ;
     }
 
-    public UserAccount retriveUserAccountExist(String userName) {
-        TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :userName", UserAccount.class);
-        query.setParameter("username", userName);
+    public UserAccount retrieveUserAccount(String username) {
+        TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :username", UserAccount.class);
+        query.setParameter("username", username);
         List<UserAccount> resultSet =  query.getResultList();
         return resultSet.size() > 0 ? resultSet.get(0) : null ;
     }

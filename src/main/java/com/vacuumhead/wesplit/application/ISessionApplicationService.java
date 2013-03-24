@@ -1,6 +1,5 @@
 package com.vacuumhead.wesplit.application;
 
-import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.responseobject.SessionWrapper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,16 +14,12 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public interface ISessionApplicationService {
-    AccountCodes createUser(String user, String password);
-    public AccountCodes checkCredentials(String username, String password);
-    AccountCodes checkExistUser(String username);
-    AccountCodes loginUser(String username, String password);
-    AccountCodes checkAlreadyLogged(String username);
-    AccountCodes logoutUser(String username);
 
     SessionWrapper createSession(HttpServletRequest request);
 
     SessionWrapper addDataToSession(HttpSession session, Map dataJson);
 
     SessionWrapper getDataFromSession(HttpSession session);
+
+    void invalidateSession(HttpSession session);
 }
