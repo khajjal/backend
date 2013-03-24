@@ -1,7 +1,5 @@
 package com.vacuumhead.wesplit.dao;
 
-import com.vacuumhead.wesplit.constants.AccountCodes;
-
 /**
  * Created by IntelliJ IDEA.
  * User: pratyushverma
@@ -10,12 +8,5 @@ import com.vacuumhead.wesplit.constants.AccountCodes;
  * To change this template use File | Settings | File Templates.
  */
 public interface ISessionDao {
-
-    public AccountCodes checkExistUser(String username);
-    public AccountCodes createUser(String username, String password);
-    public AccountCodes checkAlreadyLogged(String username);
-    public AccountCodes setUserLoggedIn(String username);
-    public AccountCodes logoutUser(String username);
-    public AccountCodes checkCredentials(String username, String password);
 
 }
