@@ -1,6 +1,6 @@
 package com.vacuumhead.wesplit.application;
 
-import com.vacuumhead.wesplit.constants.GroupCodes;
+import com.vacuumhead.wesplit.tables.Group;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,7 +10,12 @@ import com.vacuumhead.wesplit.constants.GroupCodes;
  * To change this template use File | Settings | File Templates.
  */
 public interface IGroupApplicationService {
-    public GroupCodes createGroup(String owner, String groupName);
-    public GroupCodes checkExistGroup(String groupId);
-    public String getMembers(String groupId);
+
+    public Group createGroup(String groupName, Integer accountId);
+    public Group retrieveGroupByName(String groupName);
+    public Group retrieveGroupById(Integer groupId);
+    public Group addMembersToGroup(Integer groupId, Integer accountId);
+    public Group addAdminToGroup(Integer groupId, Integer accountId);
+    public boolean isAdmin(Integer groupId, Integer accountId);
+
 }

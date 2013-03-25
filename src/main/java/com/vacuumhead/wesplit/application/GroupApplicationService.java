@@ -1,8 +1,9 @@
 package com.vacuumhead.wesplit.application;
 
-import com.vacuumhead.wesplit.constants.GroupCodes;
-import com.vacuumhead.wesplit.dao.GroupDataLayer;
-import com.vacuumhead.wesplit.dao.IGroupDataLayer;
+import com.vacuumhead.wesplit.dao.IGroupDao;
+import com.vacuumhead.wesplit.dao.IUserDao;
+import com.vacuumhead.wesplit.tables.Group;
+import com.vacuumhead.wesplit.tables.User;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,25 +14,51 @@ import com.vacuumhead.wesplit.dao.IGroupDataLayer;
  */
 public class GroupApplicationService implements IGroupApplicationService {
 
-    private IGroupDataLayer groupDataLayer;
+    private IGroupDao groupDao;
+    private IUserDao userDao;
 
-    public GroupApplicationService() {
-        this.groupDataLayer = new GroupDataLayer();
+    public GroupApplicationService(IGroupDao groupDao, IUserDao userDao) {
+        this.groupDao = groupDao;
+        this.userDao = userDao;
     }
 
-    public GroupCodes createGroup(String owner, String groupName) {
-        String groupId = owner+groupName;
-        if (groupDataLayer.checkExistGroup(groupId).equals(GroupCodes.GROUP_ALREADY_EXIST)) {
-            return GroupCodes.GROUP_ALREADY_EXIST;
+    public Group createGroup(String groupName, Integer accountId) {
+        if(retrieveGroupByName(groupName) != null) {
+            return null;
         }
-        return groupDataLayer.createGroup(owner, groupName);
+        User user = userDao.retrieveUserById(accountId);
+        Group newGroup = new Group(groupName, user);
+        groupDao.createGroup(newGroup);
+        return newGroup;
     }
 
-    public GroupCodes checkExistGroup(String groupId) {
-        return groupDataLayer.checkExistGroup(groupId);
+    public Group retrieveGroupByName(String groupName) {
+        return groupDao.retrieveGroupByName(groupName);
     }
 
-    public String getMembers(String groupId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public Group retrieveGroupById(Integer groupId) {
+        return groupDao.retrieveGroupById(groupId);
+    }
+
+    public Group addMembersToGroup(Integer groupId, Integer accountId) {
+        User user = userDao.retrieveUserById(accountId);
+        Group group = groupDao.retrieveGroupById(groupId);
+        group.getUserList().add(user);
+        groupDao.updateGroup(group);
+        return group;
+    }
+
+    public Group addAdminToGroup(Integer groupId, Integer accountId) {
+        User user = userDao.retrieveUserById(accountId);
+        Group group = groupDao.retrieveGroupById(groupId);
+        group.getAdminList().add(user);
+        groupDao.updateGroup(group);
+        return group;
+    }
+
+    public boolean isAdmin(Integer groupId, Integer accountId) {
+        User user = userDao.retrieveUserById(accountId);
+        Group group = groupDao.retrieveGroupById(groupId);
+        return group.getUserList().contains(user);
     }
 }

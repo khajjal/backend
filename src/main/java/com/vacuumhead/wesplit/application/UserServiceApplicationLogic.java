@@ -2,7 +2,15 @@ package com.vacuumhead.wesplit.application;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.dao.IUserAccountDao;
+import com.vacuumhead.wesplit.dao.IUserDao;
+import com.vacuumhead.wesplit.dao.UserAccountDao;
+import com.vacuumhead.wesplit.tables.Group;
+import com.vacuumhead.wesplit.tables.User;
 import com.vacuumhead.wesplit.tables.UserAccount;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,9 +22,14 @@ import com.vacuumhead.wesplit.tables.UserAccount;
 public class UserServiceApplicationLogic implements IUserServiceApplicationLogic {
 
     private IUserAccountDao userAccountDao;
+    private IUserDao userDao;
 
-    public UserServiceApplicationLogic(IUserAccountDao userAccountDao) {
+    public UserServiceApplicationLogic(IUserAccountDao userAccountDao, IUserDao userDao) {
         this.userAccountDao = userAccountDao;
+        this.userDao = userDao;
+    }
+
+    public UserServiceApplicationLogic(UserAccountDao userAccountDao) {
     }
 
     public AccountCodes createUser(String username, String password) {
@@ -45,6 +58,13 @@ public class UserServiceApplicationLogic implements IUserServiceApplicationLogic
         return checkExistUser(username) ? AccountCodes.ACCOUNT_ALREADY_EXIST : AccountCodes.ACCOUNT_DOES_NOT_EXIST;
     }
 
+    public List<Group> retrieveAllGroupForUser(Integer accountId) {
+        Map<String, Group> groupMap = new HashMap<String, Group>();
+
+        User user = userDao.retrieveUserById(accountId);
+        return user.getGroupMemberList();
+    }
+
     private boolean checkExistUser(String username) {
         return userAccountDao.retrieveUserAccount(username) != null;
     }
@@ -53,5 +73,7 @@ public class UserServiceApplicationLogic implements IUserServiceApplicationLogic
         return userAccountDao.retrieveUserAccount(username);
     }
 
-
+    private UserAccount retrieveUserAccount(Integer accountId) {
+        return userAccountDao.retrieveUserAccount(accountId);
+    }
 }

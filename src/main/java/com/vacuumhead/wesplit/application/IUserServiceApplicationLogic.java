@@ -1,6 +1,9 @@
 package com.vacuumhead.wesplit.application;
 
 import com.vacuumhead.wesplit.constants.AccountCodes;
+import com.vacuumhead.wesplit.tables.Group;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,4 +17,5 @@ public interface IUserServiceApplicationLogic {
     public AccountCodes createUser(String username, String password);
     public AccountCodes loginUser(String username, String password);
     public AccountCodes checkIfUserExist(String username);
+    public List<Group> retrieveAllGroupForUser(Integer accountId);
 }

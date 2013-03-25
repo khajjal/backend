@@ -1,5 +1,6 @@
 package com.vacuumhead.wesplit.dao;
 
+import com.vacuumhead.wesplit.tables.User;
 import com.vacuumhead.wesplit.tables.UserAccount;
 
 /**
@@ -10,7 +11,7 @@ import com.vacuumhead.wesplit.tables.UserAccount;
  * To change this template use File | Settings | File Templates.
  */
 public interface IUserAccountDao {
-    public UserAccount retrieveUserAccount(int id);
+    public UserAccount retrieveUserAccount(Integer id);
     public UserAccount retrieveUserAccount(String userName);
     public void createUserAccount(UserAccount userAccount);
     public void updateUserAccount(UserAccount userAccount);

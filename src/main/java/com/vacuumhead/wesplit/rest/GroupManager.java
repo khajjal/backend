@@ -1,8 +1,7 @@
 package com.vacuumhead.wesplit.rest;
 
-import com.vacuumhead.wesplit.application.GroupApplicationService;
 import com.vacuumhead.wesplit.application.IGroupApplicationService;
-import com.vacuumhead.wesplit.constants.GroupCodes;
+import com.vacuumhead.wesplit.tables.Group;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,30 +30,85 @@ public class GroupManager {
     private IGroupApplicationService groupApplicationService;
 
     public void setGroupApplicationService(IGroupApplicationService groupApplicationService) {
-        this.groupApplicationService = new GroupApplicationService();
+        this.groupApplicationService = groupApplicationService;
     }
 
-    @RequestMapping(value = "/createGroup/{user}/{groupname}", method = RequestMethod.GET)
+    @RequestMapping(value = "/createGroup/{groupname}/{user}", method = RequestMethod.GET)
     public
     @ResponseBody
-    ResponseEntity<String> createGroup(@PathVariable("user") String user, @PathVariable("groupname") String groupName, HttpServletRequest request) {
+    ResponseEntity<String> createGroup(@PathVariable("groupname") String groupName, @PathVariable("user") String _user, HttpServletRequest request) {
 
-        GroupCodes responseCode = groupApplicationService.createGroup(user, groupName);
+        Integer accountId = Integer.parseInt(_user);
+        Group group = groupApplicationService.createGroup(groupName, accountId);
 
-        return new ResponseEntity<String>(responseCode.toString(),
+        return new ResponseEntity<String>(group.toString(),
                 new HttpHeaders(), HttpStatus.OK);
 
     }
 
-    @RequestMapping(value = "/existGroup/{user}/{groupname}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getGroupByName/{groupname}", method = RequestMethod.GET)
     public
     @ResponseBody
-    ResponseEntity<String> checkExistGroup(@PathVariable("user") String user, @PathVariable("groupname") String groupName, HttpServletRequest request) {
+    ResponseEntity<String> getGroupByName(@PathVariable("groupname") String _groupName, HttpServletRequest request) {
 
-        String groupId = user+groupName;
-        GroupCodes responseCode = groupApplicationService.checkExistGroup(groupId);
+        Group group = groupApplicationService.retrieveGroupByName(_groupName);
 
-        return new ResponseEntity<String>(responseCode.toString(),
+        return new ResponseEntity<String>(group.toString(),
+                new HttpHeaders(), HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/getGroupById/{groupId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<String> getGroupById(@PathVariable("groupId") String _groupId, HttpServletRequest request) {
+
+        Integer groupId = Integer.parseInt(_groupId);
+        Group group = groupApplicationService.retrieveGroupById(groupId);
+
+        return new ResponseEntity<String>(group.toString(),
+                new HttpHeaders(), HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/addMembersToGroup/{groupId}/{userId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<String> addMembersToGroup(@PathVariable("groupId") String _groupId, @PathVariable("userId") String _userId, HttpServletRequest request) {
+
+        Integer groupId = Integer.parseInt(_groupId);
+        Integer accountId = Integer.parseInt(_userId);
+        Group group = groupApplicationService.addMembersToGroup(groupId, accountId);
+
+        return new ResponseEntity<String>(group.toString(),
+                new HttpHeaders(), HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/addAdminToGroup/{groupId}/{userId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<String> addAdminToGroup(@PathVariable("groupId") String _groupId, @PathVariable("userId") String _userId, HttpServletRequest request) {
+
+        Integer groupId = Integer.parseInt(_groupId);
+        Integer accountId = Integer.parseInt(_userId);
+        Group group = groupApplicationService.addAdminToGroup(groupId, accountId);
+
+        return new ResponseEntity<String>(group.toString(),
+                new HttpHeaders(), HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/isAdmin/{groupId}/{userId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ResponseEntity<String> isAdmin(@PathVariable("groupId") String _groupId, @PathVariable("userId") String _userId, HttpServletRequest request) {
+
+        Integer groupId = Integer.parseInt(_groupId);
+        Integer accountId = Integer.parseInt(_userId);
+        boolean isAdmin = groupApplicationService.isAdmin(groupId, accountId);
+
+        return new ResponseEntity<String>(isAdmin ? "true" : "false",
                 new HttpHeaders(), HttpStatus.OK);
 
     }

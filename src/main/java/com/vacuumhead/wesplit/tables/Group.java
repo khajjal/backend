@@ -18,7 +18,7 @@ public class Group implements Serializable {
     @Id
     @Column(name="GROUP_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int groupId=1;
+    private Integer groupId=1;
 
     @Column(name="GROUP_NAME")
     private String groupName;
@@ -49,8 +49,10 @@ public class Group implements Serializable {
         this.billList = billList;
     }
 
-    public Group(String groupName) {
+    public Group(String groupName, User owner) {
         this.groupName = groupName;
+        this.adminList.add(owner);
+        this.userList.add(owner);
     }
 
     public Group() {
@@ -64,11 +66,11 @@ public class Group implements Serializable {
         this.userList = userList;
     }
 
-    public int getGroupId() {
+    public Integer getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(Integer groupId) {
         this.groupId = groupId;
     }
 

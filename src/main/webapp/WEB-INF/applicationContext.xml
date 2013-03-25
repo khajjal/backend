@@ -26,23 +26,36 @@
         <beans:property name="suffix" value=".jsp"/>
     </beans:bean>
 
-
+    <!-- DAO LAYER -->
     <beans:bean id="userAccountDao" class="com.vacuumhead.wesplit.dao.UserAccountDao">
     </beans:bean>
 
+    <beans:bean id="groupDao" class="com.vacuumhead.wesplit.dao.GroupDao">
+    </beans:bean>
+
+    <beans:bean id="userDao" class="com.vacuumhead.wesplit.dao.UserDao">
+    </beans:bean>
+
+
+
+
+    <!-- Application Service Layer -->
     <beans:bean id="sessionApplicationService" class="com.vacuumhead.wesplit.application.SessionApplicationService">
     </beans:bean>
+
     <beans:bean id="userServiceApplicationLogic" class="com.vacuumhead.wesplit.application.UserServiceApplicationLogic">
         <beans:constructor-arg name="userAccountDao" ref="userAccountDao"/>
-    </beans:bean>
-
-    <beans:bean id="groupDataLayer" class="com.vacuumhead.wesplit.dao.GroupDataLayer">
-
+        <beans:constructor-arg name="userDao" ref="userDao"/>
     </beans:bean>
 
     <beans:bean id="groupApplicationService" class="com.vacuumhead.wesplit.application.GroupApplicationService">
+        <beans:constructor-arg ref="groupDao"/>
+        <beans:constructor-arg ref="userDao"/>
     </beans:bean>
 
+
+
+    <!-- AOP RELATED -->
 
     <beans:bean id="daoExecution" class="com.vacuumhead.wesplit.dao.SessionManager"/>
 
@@ -55,6 +68,8 @@
 
 
 
+
+    <!-- ENTITY MANAGER... BEANIFY ENTITY MANAGER FACTORY -->
     <beans:bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <beans:property name="loadTimeWeaver">
             <beans:bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver"/>

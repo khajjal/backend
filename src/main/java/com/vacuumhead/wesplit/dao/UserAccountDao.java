@@ -28,7 +28,7 @@ public class UserAccountDao implements  IUserAccountDao {
     public UserAccountDao() {
     }
 
-    public UserAccount retrieveUserAccount(int id) {
+    public UserAccount retrieveUserAccount(Integer id) {
         EntityManager entityManager = emf.createEntityManager();
         UserAccount userAccount = null ;
         entityManager.getTransaction().begin();
