@@ -17,8 +17,9 @@ import java.util.List;
 @Table(name="USER")
 public class User implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="USER_ID")
-    private int userId;
+    private int userId=1;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "MEMBERSHIP", schema = "wesplit_ddb",
@@ -31,7 +32,20 @@ public class User implements Serializable {
             joinColumns = { @JoinColumn(name = "USER_ID")},
             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
     private List<Group> groupAdminList=new ArrayList<Group>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "ACCOUNT_ID")
+    private UserAccount userAccountEmbedded;
+
     public User() {
+    }
+
+    public UserAccount getUserAccountEmbedded() {
+        return userAccountEmbedded;
+    }
+
+    public void setUserAccountEmbedded(UserAccount userAccountEmbedded) {
+        this.userAccountEmbedded = userAccountEmbedded;
     }
 
     public List<Group> getGroupMemberList() {

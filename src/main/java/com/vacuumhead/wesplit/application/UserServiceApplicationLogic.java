@@ -36,7 +36,11 @@ public class UserServiceApplicationLogic implements IUserServiceApplicationLogic
         if (checkExistUser(username)) {
             return AccountCodes.ACCOUNT_ALREADY_EXIST;
         }
-        userAccountDao.createUserAccount(new UserAccount(username, password));
+        UserAccount userAccount=  new UserAccount(username, password);
+        User user=new User();
+        userAccount.setUserEmbedded(user);
+        user.setUserAccountEmbedded(userAccount);
+        userAccountDao.createUserAccount(userAccount);
         return AccountCodes.ACCOUNT_CREATION_SUCCESSFUL;
     }
 

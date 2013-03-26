@@ -25,9 +25,8 @@ public class UserAccount implements Serializable {
 
     @Column(name = "PASSWORD")
     private String password;
-    @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private User user;
+    @OneToOne(mappedBy = "userAccountEmbedded",cascade = CascadeType.ALL)
+    private User userEmbedded;
 
     private boolean isActive;
 
@@ -39,12 +38,12 @@ public class UserAccount implements Serializable {
         isActive = active;
     }
 
-    public User getUser() {
-        return user;
+    public User getUserEmbedded() {
+        return userEmbedded;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserEmbedded(User userEmbedded) {
+        this.userEmbedded = userEmbedded;
     }
 
     public Integer getAccountId() {
