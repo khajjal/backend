@@ -43,7 +43,9 @@ public class GroupApplicationService implements IGroupApplicationService {
     public Group addMembersToGroup(Integer groupId, Integer accountId) {
         User user = userDao.retrieveUserById(accountId);
         Group group = groupDao.retrieveGroupById(groupId);
+        user.getGroupMemberList().add(group);
         group.getUserList().add(user);
+
         groupDao.updateGroup(group);
         return group;
     }
