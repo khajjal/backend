@@ -30,9 +30,9 @@ public class UserAccountDao implements  IUserAccountDao {
 
     public UserAccount retrieveUserAccount(Integer id) {
         EntityManager entityManager = emf.createEntityManager();
-        UserAccount userAccount = null ;
+        UserAccount userAccount;
         entityManager.getTransaction().begin();
-        userAccount = entityManager.find(UserAccount.class , id);
+        userAccount = entityManager.find(UserAccount.class ,id);
         entityManager.getTransaction().commit();
         return userAccount ;
     }

@@ -45,9 +45,12 @@ public class UserAccount implements Serializable {
     public void setUserEmbedded(User userEmbedded) {
         this.userEmbedded = userEmbedded;
     }
-
     public Integer getAccountId() {
         return accountId;
+    }
+
+    public void setAccountId(Integer accountId) {
+        this.accountId = accountId;
     }
 
     public UserAccount() {

@@ -21,18 +21,18 @@ public class User implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "MEMBERSHIP", schema = "wesplit_ddb",
-            joinColumns = { @JoinColumn(name = "USER_ID")},
+            joinColumns = { @JoinColumn(name = "ACCOUNT_ID")},
             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
     private List<Group> groupMemberList=new ArrayList<Group>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "ADMIN", schema = "wesplit_ddb",
-            joinColumns = { @JoinColumn(name = "USER_ID")},
+            joinColumns = { @JoinColumn(name = "ACCOUNT_ID")},
             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
     private List<Group> groupAdminList=new ArrayList<Group>();
 
     @Id
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "ACCOUNT_ID")
     private UserAccount userAccountEmbedded;
 
