@@ -37,7 +37,6 @@ public class UserAccount implements Serializable {
     public void setActive(boolean active) {
         isActive = active;
     }
-
     public User getUserEmbedded() {
         return userEmbedded;
     }

@@ -1,0 +1,136 @@
+Index: src/main/java/com/vacuumhead/wesplit/dao/UserAccountDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.vacuumhead.wesplit.dao;\r\n\r\n\r\nimport com.vacuumhead.wesplit.tables.UserAccount;\r\n\r\nimport javax.persistence.EntityManager;\r\nimport javax.persistence.EntityManagerFactory;\r\nimport javax.persistence.PersistenceUnit;\r\nimport javax.persistence.TypedQuery;\r\nimport java.util.List;\r\n\r\n/**\r\n * Created with IntelliJ IDEA.\r\n * User: shuklar\r\n * Date: 3/24/13\r\n * Time: 1:08 AM\r\n * To change this template use File | Settings | File Templates.\r\n */\r\npublic class UserAccountDao implements  IUserAccountDao {\r\n\r\n    @PersistenceUnit\r\n    private EntityManagerFactory emf;\r\n\r\n    public void setEmf(EntityManagerFactory emf) {\r\n        this.emf = emf;\r\n    }\r\n\r\n    public UserAccountDao() {\r\n    }\r\n\r\n    public UserAccount retrieveUserAccount(Integer id) {\r\n        EntityManager entityManager = emf.createEntityManager();\r\n        UserAccount userAccount = null ;\r\n        entityManager.getTransaction().begin();\r\n        userAccount = entityManager.find(UserAccount.class , id);\r\n        entityManager.getTransaction().commit();\r\n        return userAccount ;\r\n    }\r\n\r\n    public UserAccount retrieveUserAccount(String username) {\r\n        EntityManager entityManager = emf.createEntityManager();\r\n        TypedQuery<UserAccount> query = entityManager.createQuery(\"select l from UserAccount l where username = :username\", UserAccount.class);\r\n        query.setParameter(\"username\", username);\r\n        List<UserAccount> resultSet =  query.getResultList();\r\n        return resultSet.size() > 0 ? resultSet.get(0) : null ;\r\n    }\r\n\r\n    public void createUserAccount(UserAccount userAccount) {\r\n        EntityManager entityManager = emf.createEntityManager();\r\n        entityManager.getTransaction().begin();\r\n        entityManager.persist(userAccount);\r\n        entityManager.getTransaction().commit();\r\n    }\r\n\r\n    public void updateUserAccount(UserAccount userAccount) {\r\n        EntityManager entityManager = emf.createEntityManager();\r\n        entityManager.getTransaction().begin();\r\n        entityManager.merge(userAccount);\r\n        entityManager.getTransaction().commit();\r\n    }\r\n\r\n    public void deleteUserAccount(UserAccount userAccount) {\r\n        EntityManager entityManager = emf.createEntityManager();\r\n        entityManager.getTransaction().begin();\r\n        entityManager.remove(userAccount);\r\n        entityManager.getTransaction().commit();\r\n    }\r\n}
+===================================================================
+--- src/main/java/com/vacuumhead/wesplit/dao/UserAccountDao.java	(revision d40ac8bad2659ec59d16edf7ffdfa48fc9611c3f)
++++ src/main/java/com/vacuumhead/wesplit/dao/UserAccountDao.java	(revision )
+@@ -30,9 +30,9 @@
+ 
+     public UserAccount retrieveUserAccount(Integer id) {
+         EntityManager entityManager = emf.createEntityManager();
+-        UserAccount userAccount = null ;
++        UserAccount userAccount;
+         entityManager.getTransaction().begin();
+-        userAccount = entityManager.find(UserAccount.class , id);
++        userAccount = entityManager.find(UserAccount.class ,id);
+         entityManager.getTransaction().commit();
+         return userAccount ;
+     }
+\ No newline at end of file
+Index: src/main/java/com/vacuumhead/wesplit/tables/UserAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.vacuumhead.wesplit.tables;\n\nimport javax.persistence.*;\nimport java.io.Serializable;\n\n/**\n * Created with IntelliJ IDEA.\n * User: pratyushverma\n * Date: 20/02/13\n * Time: 3:59 PM\n * To change this template use File | Settings | File Templates.\n */\n@Entity\n@Table(name = \"USER_ACCOUNT\", uniqueConstraints = {\n        @UniqueConstraint(columnNames = {\"username\", \"account_id\"})\n})\npublic class UserAccount implements Serializable {\n    @Id\n    @GeneratedValue(strategy = GenerationType.AUTO)\n    @Column(name = \"ACCOUNT_ID\")\n    private Integer accountId = 1;\n\n    @Column(name = \"USERNAME\")\n    private String username;\n\n    @Column(name = \"PASSWORD\")\n    private String password;\n    @OneToOne(mappedBy = \"userAccountEmbedded\",cascade = CascadeType.ALL)\n    private User userEmbedded;\n\n    private boolean isActive;\n\n    public boolean isActive() {\n        return isActive;\n    }\n\n    public void setActive(boolean active) {\n        isActive = active;\n    }\n\n    public User getUserEmbedded() {\n        return userEmbedded;\n    }\n\n    public void setUserEmbedded(User userEmbedded) {\n        this.userEmbedded = userEmbedded;\n    }\n\n    public Integer getAccountId() {\n        return accountId;\n    }\n\n    public UserAccount() {\n    }\n\n    public UserAccount(String username, String password) {\n        this.username = username;\n        this.password = password;\n    }\n\n    public String getUsername() {\n        return username;\n    }\n\n    public void setUsername(String username) {\n        this.username = username;\n    }\n\n    public String getPassword() {\n        return password;\n    }\n\n    public void setPassword(String password) {\n        this.password = password;\n    }\n\n\n\n\n}\n
+===================================================================
+--- src/main/java/com/vacuumhead/wesplit/tables/UserAccount.java	(revision d40ac8bad2659ec59d16edf7ffdfa48fc9611c3f)
++++ src/main/java/com/vacuumhead/wesplit/tables/UserAccount.java	(revision )
+@@ -45,9 +45,12 @@
+     public void setUserEmbedded(User userEmbedded) {
+         this.userEmbedded = userEmbedded;
+     }
+-
+     public Integer getAccountId() {
+         return accountId;
++    }
++
++    public void setAccountId(Integer accountId) {
++        this.accountId = accountId;
+     }
+ 
+     public UserAccount() {
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n    <modelVersion>4.0.0</modelVersion>\n\n    <groupId>wesplit</groupId>\n    <artifactId>wesplit</artifactId>\n    <version>1.0</version>\n    <name>wesplit</name>\n    <packaging>war</packaging>\n\n    <build>\n        <plugins>\n            <plugin>\n\n                <groupId>org.apache.tomcat.maven</groupId>\n                <artifactId>tomcat7-maven-plugin</artifactId>\n                <version>2.0</version>\n                <configuration>\n                    <path>/</path>\n                    <port>8080</port>\n                    <warFile>${project.basedir}/wesplit.war</warFile>\n                </configuration>\n\n            </plugin>\n            <plugin>\n                <groupId>org.apache.maven.plugins</groupId>\n                <artifactId>maven-compiler-plugin</artifactId>\n                <version>2.5.1</version>\n            </plugin>\n\n        </plugins>\n    </build>\n\n    <dependencies>\n        <dependency>\n            <groupId>org.springframework</groupId>\n            <artifactId>spring-webmvc</artifactId>\n            <version>3.2.1.RELEASE</version>\n        </dependency>\n        <dependency>\n            <groupId>org.springframework</groupId>\n            <artifactId>spring-context</artifactId>\n            <version>3.2.1.RELEASE</version>\n        </dependency>\n        <dependency>\n            <groupId>org.springframework</groupId>\n            <artifactId>spring-web</artifactId>\n            <version>3.2.1.RELEASE</version>\n        </dependency>\n        <dependency>\n            <groupId>org.springframework</groupId>\n            <artifactId>spring-core</artifactId>\n            <version>3.2.1.RELEASE</version>\n        </dependency>\n        <dependency>\n        \t<groupId>org.springframework</groupId>\n        \t<artifactId>spring-orm</artifactId>\n        \t<version>3.2.1.RELEASE</version>\n        </dependency>\n        <dependency>\n            <groupId>org.springframework</groupId>\n            <artifactId>spring-dao</artifactId>\n            <version>2.0.8</version>\n        </dependency>\n        <dependency>\n\n            <groupId>mysql</groupId>\n            <artifactId>mysql-connector-java</artifactId>\n            <version>5.1.9</version>\n        </dependency>\n        <dependency>\n            <groupId>org.aspectj</groupId>\n            <artifactId>aspectjtools</artifactId>\n            <version>1.6.11</version>\n        </dependency>\n\n        <dependency>\n            <groupId>org.aspectj</groupId>\n            <artifactId>aspectjrt</artifactId>\n            <version>1.6.11</version>\n        </dependency>\n        <dependency>\n            <groupId>org.aspectj</groupId>\n            <artifactId>aspectjweaver</artifactId>\n            <version>1.6.11</version>\n        </dependency>\n        <dependency>\n            <groupId>org.springframework.data</groupId>\n            <artifactId>spring-data-jpa</artifactId>\n            <version>1.3.0.RELEASE</version>\n        </dependency>\n\n\n\n        <dependency>\n            <groupId>javax.servlet</groupId>\n            <artifactId>servlet-api</artifactId>\n            <version>2.5</version>\n            <scope>provided</scope>\n        </dependency>\n\n        <dependency>\n            <groupId>javax.activation</groupId>\n            <artifactId>activation</artifactId>\n            <version>1.1</version>\n        </dependency>\n        <dependency>\n            <groupId>org.json</groupId>\n            <artifactId>json</artifactId>\n            <version>20090211</version>\n        </dependency>\n\n        <dependency>\n            <groupId>dom4j</groupId>\n            <artifactId>dom4j</artifactId>\n            <version>1.6.1</version>\n        </dependency>\n\n        <dependency>\n            <groupId>org.springframework</groupId>\n            <artifactId>spring</artifactId>\n            <version>2.5.6.SEC03</version>\n        </dependency>\n\n        <dependency>\n            <groupId>org.hibernate</groupId>\n            <artifactId>hibernate-core</artifactId>\n            <version>4.1.10.Final</version>\n        </dependency>\n        <dependency>\n            <groupId>org.hibernate</groupId>\n            <artifactId>hibernate-entitymanager</artifactId>\n            <version>4.1.10.Final</version>\n        </dependency>\n\n        <dependency>\n            <groupId>com.google.code.gson</groupId>\n            <artifactId>gson</artifactId>\n            <version>2.2.2</version>\n        </dependency>\n\n        <dependency>\n            <groupId>commons-dbcp</groupId>\n            <artifactId>commons-dbcp</artifactId>\n            <version>20030825.184428</version>\n        </dependency>\n        <dependency>\n            <groupId>commons-pool</groupId>\n            <artifactId>commons-pool</artifactId>\n            <version>20030825.183949</version>\n        </dependency>\n        <dependency>\n            <groupId>commons-collections</groupId>\n            <artifactId>commons-collections</artifactId>\n            <version>20040616</version>\n        </dependency>\n\n\n    </dependencies>\n\n</project>
+===================================================================
+--- pom.xml	(revision d40ac8bad2659ec59d16edf7ffdfa48fc9611c3f)
++++ pom.xml	(revision )
+@@ -156,6 +156,24 @@
+             <artifactId>commons-collections</artifactId>
+             <version>20040616</version>
+         </dependency>
++        <dependency>
++            <groupId>org.apache.logging.log4j</groupId>
++            <artifactId>log4j-core</artifactId>
++            <version>2.0-beta4</version>
++        </dependency>
++        <dependency>
++            <groupId>log4j</groupId>
++            <artifactId>log4j</artifactId>
++            <version>1.2.16</version>
++        </dependency>
++        <dependency>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-log4j12</artifactId>
++            <version>1.7.3</version>
++        </dependency>
++
++
++
+ 
+ 
+     </dependencies>
+\ No newline at end of file
+Index: src/main/webapp/WEB-INF/web.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<web-app version=\"2.5\" xmlns=\"http://java.sun.com/xml/ns/javaee\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd\">\n\n    <!-- Creates the Spring Container shared by all Servlets and Filters -->\n    <listener>\n        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>\n    </listener>\n    <listener>\n\t\t<listener-class>com.vacuumhead.wesplit.listener.SessionListener</listener-class>\n\t</listener>\n\n    <!-- Processes application requests -->\n    <servlet>\n        <servlet-name>appServlet</servlet-name>\n        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>\n        <init-param>\n            <param-name>contextConfigLocation</param-name>\n            <param-value>/WEB-INF/applicationContext.xml</param-value>\n        </init-param>\n        <load-on-startup>1</load-on-startup>\n    </servlet>\n\n    <servlet-mapping>\n        <servlet-name>appServlet</servlet-name>\n        <url-pattern>/</url-pattern>\n    </servlet-mapping>\n\n</web-app>
+===================================================================
+--- src/main/webapp/WEB-INF/web.xml	(revision d40ac8bad2659ec59d16edf7ffdfa48fc9611c3f)
++++ src/main/webapp/WEB-INF/web.xml	(revision )
+@@ -11,6 +11,14 @@
+ 		<listener-class>com.vacuumhead.wesplit.listener.SessionListener</listener-class>
+ 	</listener>
+ 
++    <context-param>
++        <param-name>log4jConfigLocation</param-name>
++        <param-value>/WEB-INF/classes/log4j.properties</param-value>
++    </context-param>
++
++    <listener>
++        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
++    </listener>
+     <!-- Processes application requests -->
+     <servlet>
+         <servlet-name>appServlet</servlet-name>
+\ No newline at end of file
+Index: src/main/java/com/vacuumhead/wesplit/tables/User.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.vacuumhead.wesplit.tables;\r\n\r\nimport javax.persistence.*;\r\nimport java.io.Serializable;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\n\r\n/**\r\n * Created with IntelliJ IDEA.\r\n * User: Vinay\r\n * Date: 23/3/13\r\n * Time: 2:00 AM\r\n * To change this template use File | Settings | File Templates.\r\n */\r\n@Entity\r\n@Table(name=\"USER\")\r\npublic class User implements Serializable {\r\n\r\n\r\n\r\n    @ManyToMany(cascade = CascadeType.ALL)\r\n    @JoinTable(name = \"MEMBERSHIP\", schema = \"wesplit_ddb\",\r\n            joinColumns = { @JoinColumn(name = \"USER_ID\")},\r\n            inverseJoinColumns = { @JoinColumn(name = \"GROUP_ID\") })\r\n    private List<Group> groupMemberList=new ArrayList<Group>();\r\n\r\n    @ManyToMany(cascade = CascadeType.ALL)\r\n    @JoinTable(name = \"ADMIN\", schema = \"wesplit_ddb\",\r\n            joinColumns = { @JoinColumn(name = \"USER_ID\")},\r\n            inverseJoinColumns = { @JoinColumn(name = \"GROUP_ID\") })\r\n    private List<Group> groupAdminList=new ArrayList<Group>();\r\n\r\n    @Id\r\n    @OneToOne(cascade = CascadeType.ALL)\r\n    @JoinColumn(name = \"ACCOUNT_ID\")\r\n    private UserAccount userAccountEmbedded;\r\n\r\n    public User() {\r\n    }\r\n\r\n    public UserAccount getUserAccountEmbedded() {\r\n        return userAccountEmbedded;\r\n    }\r\n\r\n    public void setUserAccountEmbedded(UserAccount userAccountEmbedded) {\r\n        this.userAccountEmbedded = userAccountEmbedded;\r\n    }\r\n\r\n    public List<Group> getGroupMemberList() {\r\n        return groupMemberList;\r\n    }\r\n\r\n    public void setGroupMemberList(List<Group> groupMemberList) {\r\n        this.groupMemberList = groupMemberList;\r\n    }\r\n\r\n    public List<Group> getGroupAdminList() {\r\n        return groupAdminList;\r\n    }\r\n\r\n    public void setGroupAdminList(List<Group> groupAdminList) {\r\n        this.groupAdminList = groupAdminList;\r\n    }\r\n\r\n\r\n}\r\n
+===================================================================
+--- src/main/java/com/vacuumhead/wesplit/tables/User.java	(revision d40ac8bad2659ec59d16edf7ffdfa48fc9611c3f)
++++ src/main/java/com/vacuumhead/wesplit/tables/User.java	(revision )
+@@ -21,18 +21,18 @@
+ 
+     @ManyToMany(cascade = CascadeType.ALL)
+     @JoinTable(name = "MEMBERSHIP", schema = "wesplit_ddb",
+-            joinColumns = { @JoinColumn(name = "USER_ID")},
++            joinColumns = { @JoinColumn(name = "ACCOUNT_ID")},
+             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
+     private List<Group> groupMemberList=new ArrayList<Group>();
+ 
+     @ManyToMany(cascade = CascadeType.ALL)
+     @JoinTable(name = "ADMIN", schema = "wesplit_ddb",
+-            joinColumns = { @JoinColumn(name = "USER_ID")},
++            joinColumns = { @JoinColumn(name = "ACCOUNT_ID")},
+             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
+     private List<Group> groupAdminList=new ArrayList<Group>();
+ 
+     @Id
+-    @OneToOne(cascade = CascadeType.ALL)
++    @OneToOne
+     @JoinColumn(name = "ACCOUNT_ID")
+     private UserAccount userAccountEmbedded;
+ 

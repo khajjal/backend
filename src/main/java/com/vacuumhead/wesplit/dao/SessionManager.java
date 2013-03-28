@@ -34,7 +34,7 @@ public class SessionManager {
                     + ". Took " + String.valueOf(stopTime - startTime) + " ms.");
         } catch (Throwable throwable) {
 
-            System.out.println("calling in DAO " + point.toString() + " threw exception = ");
+            System.out.println("calling in DAO " + point.toString() + " threw exception = "+throwable.toString());
         }
 
         return retVal;

@@ -39,10 +39,12 @@ public class UserAccountDao implements  IUserAccountDao {
 
     public UserAccount retrieveUserAccount(String username) {
         EntityManager entityManager = emf.createEntityManager();
-        TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :username", UserAccount.class);
-        query.setParameter("username", username);
-        List<UserAccount> resultSet =  query.getResultList();
-        return resultSet.size() > 0 ? resultSet.get(0) : null ;
+        TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :param1", UserAccount.class);
+        query.setParameter("param1", (String)username);
+        System.out.println("12334" +username +" " +username.getClass());
+        UserAccount account =  query.getSingleResult();
+        //return resultSet.size() > 0 ? resultSet.get(0) : null ;
+        return account;
     }
 
     public void createUserAccount(UserAccount userAccount) {

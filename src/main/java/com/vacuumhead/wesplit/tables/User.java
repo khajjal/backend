@@ -21,30 +21,39 @@ public class User implements Serializable {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "MEMBERSHIP", schema = "wesplit_ddb",
-            joinColumns = { @JoinColumn(name = "ACCOUNT_ID")},
+            joinColumns = { @JoinColumn(name = "USER_ID")},
             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
     private List<Group> groupMemberList=new ArrayList<Group>();
 
+    @Id
+    @Column(name = "USER_ID")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer userId=1;
+    @OneToOne
+    @JoinColumn(name = "ACCOUNT_ID ")
+    private UserAccount userAccountEmbedded;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "ADMIN", schema = "wesplit_ddb",
-            joinColumns = { @JoinColumn(name = "ACCOUNT_ID")},
+            joinColumns = { @JoinColumn(name = "USER_ID")},
             inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
     private List<Group> groupAdminList=new ArrayList<Group>();
 
-    @Id
-    @OneToOne
-    @JoinColumn(name = "ACCOUNT_ID")
-    private UserAccount userAccountEmbedded;
-
     public User() {
     }
-
     public UserAccount getUserAccountEmbedded() {
         return userAccountEmbedded;
     }
 
     public void setUserAccountEmbedded(UserAccount userAccountEmbedded) {
         this.userAccountEmbedded = userAccountEmbedded;
+    }
+
+    public Integer getUserrId() {
+        return userId;
+    }
+
+    public void setUserrId(Integer userrId) {
+        this.userId = userrId;
     }
 
     public List<Group> getGroupMemberList() {
