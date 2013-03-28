@@ -30,7 +30,7 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer userId=1;
     @OneToOne
-    @JoinColumn(name = "ACCOUNT_ID ")
+    @JoinColumn(name = "ACCOUNT_ID")
     private UserAccount userAccountEmbedded;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "ADMIN", schema = "wesplit_ddb",
