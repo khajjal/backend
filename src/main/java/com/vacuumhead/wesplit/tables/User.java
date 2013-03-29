@@ -14,32 +14,26 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name="USER")
+@Table(name = "USER")
 public class User implements Serializable {
-
-
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "MEMBERSHIP", schema = "wesplit_ddb",
-            joinColumns = { @JoinColumn(name = "USER_ID")},
-            inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
-    private List<Group> groupMemberList=new ArrayList<Group>();
-
     @Id
     @Column(name = "USER_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer userId=1;
+    private Integer userId = 1;
+
     @OneToOne
     @JoinColumn(name = "ACCOUNT_ID ")
     private UserAccount userAccountEmbedded;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "ADMIN", schema = "wesplit_ddb",
-            joinColumns = { @JoinColumn(name = "USER_ID")},
-            inverseJoinColumns = { @JoinColumn(name = "GROUP_ID") })
-    private List<Group> groupAdminList=new ArrayList<Group>();
+
+    @ManyToMany(mappedBy = "userList",cascade = CascadeType.ALL)
+    private List<Group> groupMemberList = new ArrayList<Group>();
+
+    @ManyToMany(mappedBy = "adminList",cascade = CascadeType.ALL)
+    private List<Group> groupAdminList = new ArrayList<Group>();
 
     public User() {
     }
+
     public UserAccount getUserAccountEmbedded() {
         return userAccountEmbedded;
     }

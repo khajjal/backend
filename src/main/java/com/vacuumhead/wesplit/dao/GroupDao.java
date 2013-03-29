@@ -1,6 +1,7 @@
 package com.vacuumhead.wesplit.dao;
 
 import com.vacuumhead.wesplit.tables.Group;
+import com.vacuumhead.wesplit.tables.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -53,9 +54,16 @@ public class GroupDao implements IGroupDao {
         return resultSet.size() > 0 ? resultSet.get(0) : null ;
     }
 
-    public void updateGroup(Group group) {
+
+
+    public void updateGroup(Group group, User user) {
         EntityManager entityManager = emf.createEntityManager();
         entityManager.getTransaction().begin();
+        user=entityManager.find(User.class,user.getUserrId());
+        group=entityManager.find(Group.class,group.getGroupId());
+        user.getGroupMemberList().add(group);
+        group.getUserList().add(user);
+        //group=entityManager.find(Group.class,group.getGroupId());
         entityManager.merge(group);
         entityManager.getTransaction().commit();
     }

@@ -23,10 +23,16 @@ public class Group implements Serializable {
     @Column(name="GROUP_NAME")
     private String groupName;
 
-    @ManyToMany(mappedBy = "groupMemberList",cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinTable(name = "MEMBERSHIP", schema = "wesplit_ddb",
+            joinColumns = {@JoinColumn(name = "GROUP_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "USER_ID")})
     private List<User> userList=new ArrayList<User>();
 
-    @ManyToMany(mappedBy = "groupAdminList",cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinTable(name = "ADMIN", schema = "wesplit_ddb",
+            joinColumns = {@JoinColumn(name = "GROUP_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "USER_ID")})
     private List<User> adminList=new ArrayList<User>();
 
 
@@ -49,10 +55,10 @@ public class Group implements Serializable {
         this.billList = billList;
     }
 
-    public Group(String groupName, User owner) {
+    public Group(String groupName) {
         this.groupName = groupName;
-        this.adminList.add(owner);
-        this.userList.add(owner);
+       // this.adminList.add(owner);
+       // this.userList.add(owner);
     }
 
     public Group() {

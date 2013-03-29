@@ -26,9 +26,17 @@ public class GroupApplicationService implements IGroupApplicationService {
         if(retrieveGroupByName(groupName) != null) {
             return null;
         }
+        //if user exists
         User user = userDao.retrieveUserById(accountId);
-        Group newGroup = new Group(groupName, user);
+        if(user==null){
+                return  null;
+        }
+        Group newGroup = new Group(groupName);
         groupDao.createGroup(newGroup);
+       // newGroup.getAdminList().add(user);
+        //user.getGroupAdminList().add(newGroup);
+        //user.getGroupMemberList().add(newGroup);
+        groupDao.updateGroup(newGroup,user);
         return newGroup;
     }
 
@@ -46,7 +54,7 @@ public class GroupApplicationService implements IGroupApplicationService {
         user.getGroupMemberList().add(group);
         group.getUserList().add(user);
 
-        groupDao.updateGroup(group);
+        groupDao.updateGroup(group,user);
         return group;
     }
 
@@ -54,7 +62,7 @@ public class GroupApplicationService implements IGroupApplicationService {
         User user = userDao.retrieveUserById(accountId);
         Group group = groupDao.retrieveGroupById(groupId);
         group.getAdminList().add(user);
-        groupDao.updateGroup(group);
+        groupDao.updateGroup(group,user);
         return group;
     }
 

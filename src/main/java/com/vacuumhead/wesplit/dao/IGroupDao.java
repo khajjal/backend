@@ -1,6 +1,7 @@
 package com.vacuumhead.wesplit.dao;
 
 import com.vacuumhead.wesplit.tables.Group;
+import com.vacuumhead.wesplit.tables.User;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,6 +15,6 @@ public interface IGroupDao {
     public void createGroup(Group group);
     public Group retrieveGroupById(Integer groupId);
     public Group retrieveGroupByName(String groupName);
-    public void updateGroup(Group group);
+    public void updateGroup(Group group,User user);
 
 }
