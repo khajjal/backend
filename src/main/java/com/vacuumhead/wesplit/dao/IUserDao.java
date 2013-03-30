@@ -3,6 +3,8 @@ package com.vacuumhead.wesplit.dao;
 import com.vacuumhead.wesplit.tables.User;
 import com.vacuumhead.wesplit.tables.UserAccount;
 
+import javax.persistence.EntityManager;
+
 /**
  * Created by IntelliJ IDEA.
  * User: pratyushverma
@@ -12,5 +14,6 @@ import com.vacuumhead.wesplit.tables.UserAccount;
  */
 public interface IUserDao {
 
-    public User retrieveUserById(Integer accountId);
+    public User retrieveUserById(EntityManager entityManager,Integer accountId);
+    public void updateUser(EntityManager entityManager,User user);
 }
