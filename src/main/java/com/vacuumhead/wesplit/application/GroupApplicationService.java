@@ -34,8 +34,8 @@ public class GroupApplicationService implements IGroupApplicationService {
 
     public Group createGroup(String groupName, Integer accountId) {
         EntityManager entityManager = emf.createEntityManager();
-        try{
-            entityManager.getTransaction().begin();
+     /*   try{
+            entityManager.getTransaction().begin();*/
             if(retrieveGroupByName(groupName) != null) {
                 return null;
             }
@@ -55,9 +55,9 @@ public class GroupApplicationService implements IGroupApplicationService {
             //groupDao.updateGroup(newGroup,user);
 
             return newGroup;
-        }   finally {
+        /*}   finally {
             entityManager.getTransaction().commit();
-        }
+        }*/
 
     }
 
@@ -77,8 +77,8 @@ public class GroupApplicationService implements IGroupApplicationService {
 
     public Group addMembersToGroup(Integer groupId, Integer accountId) {
         EntityManager entityManager = emf.createEntityManager();
-        try{
-            entityManager.getTransaction().begin();
+        /*try{
+            entityManager.getTransaction().begin();*/
             User user = userDao.retrieveUserById(entityManager,accountId);
             Group group = groupDao.retrieveGroupById(entityManager,groupId);
             user.getGroupMemberList().add(group);
@@ -86,24 +86,24 @@ public class GroupApplicationService implements IGroupApplicationService {
 
             groupDao.updateGroup(entityManager,group);
             return group;
-        }finally {
+        /*}finally {
             entityManager.getTransaction().commit();
-        }
+        }*/
 
     }
 
     public Group addAdminToGroup(Integer groupId, Integer accountId) {
         EntityManager entityManager = emf.createEntityManager();
-        try{
-            entityManager.getTransaction().begin();
+        /*try{
+            entityManager.getTransaction().begin();*/
         User user = userDao.retrieveUserById(entityManager,accountId);
         Group group = groupDao.retrieveGroupById(entityManager,groupId);
         group.getAdminList().add(user);
         groupDao.updateGroup(entityManager,group);
         return group;
-        }finally {
+        /*}finally {
             entityManager.getTransaction().commit();
-        }
+        }*/
     }
 
     public boolean isAdmin(Integer groupId, Integer accountId) {

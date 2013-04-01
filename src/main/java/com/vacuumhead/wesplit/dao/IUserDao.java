@@ -2,6 +2,9 @@ package com.vacuumhead.wesplit.dao;
 
 import com.vacuumhead.wesplit.tables.User;
 import com.vacuumhead.wesplit.tables.UserAccount;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
@@ -12,6 +15,7 @@ import javax.persistence.EntityManager;
  * Time: 12:30 AM
  * To change this template use File | Settings | File Templates.
  */
+
 public interface IUserDao {
 
     public User retrieveUserById(EntityManager entityManager,Integer accountId);

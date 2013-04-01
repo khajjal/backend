@@ -43,9 +43,9 @@ public void setEmf(EntityManagerFactory emf) {
 
     public AccountCodes createUser(String username, String password) {
         EntityManager entityManager = emf.createEntityManager();
-        try{
+        /*try{
             entityManager.getTransaction().begin();
-            if (checkExistUser(entityManager,username)) {
+        */    if (checkExistUser(entityManager,username)) {
                 return AccountCodes.ACCOUNT_ALREADY_EXIST;
             }
             UserAccount userAccount=  new UserAccount(username, password);
@@ -54,9 +54,9 @@ public void setEmf(EntityManagerFactory emf) {
             user.setUserAccountEmbedded(userAccount);
             userAccountDao.createUserAccount(entityManager,userAccount);
             return AccountCodes.ACCOUNT_CREATION_SUCCESSFUL;
-        }     finally {
+        /*}     finally {
             entityManager.getTransaction().commit();
-        }
+        }*/
 
     }
 

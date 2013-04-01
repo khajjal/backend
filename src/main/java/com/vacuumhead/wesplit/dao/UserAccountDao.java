@@ -51,7 +51,9 @@ public class UserAccountDao implements  IUserAccountDao {
     public void createUserAccount(EntityManager entityManager,UserAccount userAccount) {
         //EntityManager entityManager = emf.createEntityManager();
         //entityManager.getTransaction().begin();
+        System.out.println("1232");
         entityManager.persist(userAccount);
+        entityManager.flush();
         //entityManager.getTransaction().commit();
     }
 
