@@ -41,6 +41,11 @@ public void setEmf(EntityManagerFactory emf) {
     public UserServiceApplicationLogic(UserAccountDao userAccountDao) {
     }
 
+    @Override
+    public User retrieveUser(Integer userId) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public AccountCodes createUser(String username, String password) {
         EntityManager entityManager = emf.createEntityManager();
         try{
