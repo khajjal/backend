@@ -3,8 +3,6 @@ package com.vacuumhead.wesplit.dao;
 import com.vacuumhead.wesplit.tables.User;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +30,6 @@ public class UserDao implements IUserDao {
         return user;
     }
 
-    @Override
     public void updateUser(EntityManager entityManager,User user) {
         //EntityManager entityManager = emf.createEntityManager();
         //entityManager.getTransaction().begin();

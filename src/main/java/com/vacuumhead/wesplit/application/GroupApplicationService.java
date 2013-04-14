@@ -106,10 +106,10 @@ public class GroupApplicationService implements IGroupApplicationService {
         }
     }
 
-    public boolean isAdmin(Integer groupId, Integer accountId) {
+    public boolean isAdminOfGroup(Integer groupId, Integer accountId) {
         EntityManager entityManager = emf.createEntityManager();
         User user = userDao.retrieveUserById(entityManager,accountId);
         Group group = groupDao.retrieveGroupById(entityManager,groupId);
-        return group.getUserList().contains(user);
+        return group.getAdminList().contains(user);
     }
 }

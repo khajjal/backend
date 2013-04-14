@@ -16,6 +16,6 @@ public interface IGroupApplicationService {
     public Group retrieveGroupById(Integer groupId);
     public Group addMembersToGroup(Integer groupId, Integer accountId);
     public Group addAdminToGroup(Integer groupId, Integer accountId);
-    public boolean isAdmin(Integer groupId, Integer accountId);
+    public boolean isAdminOfGroup(Integer groupId, Integer accountId);
 
 }

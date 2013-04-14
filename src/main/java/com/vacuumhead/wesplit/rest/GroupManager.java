@@ -106,7 +106,7 @@ public class GroupManager {
 
         Integer groupId = Integer.parseInt(_groupId);
         Integer accountId = Integer.parseInt(_userId);
-        boolean isAdmin = groupApplicationService.isAdmin(groupId, accountId);
+        boolean isAdmin = groupApplicationService.isAdminOfGroup(groupId, accountId);
 
         return new ResponseEntity<String>(isAdmin ? "true" : "false",
                 new HttpHeaders(), HttpStatus.OK);
