@@ -2,6 +2,8 @@ package com.vacuumhead.wesplit.application;
 
 import com.vacuumhead.wesplit.constants.BillCodes;
 import com.vacuumhead.wesplit.dao.IBillDao;
+import com.vacuumhead.wesplit.dao.IGroupDao;
+import com.vacuumhead.wesplit.dao.IUserDao;
 import com.vacuumhead.wesplit.tables.Bill;
 import com.vacuumhead.wesplit.tables.Group;
 import com.vacuumhead.wesplit.tables.User;
@@ -20,62 +22,68 @@ import java.util.Map;
  * Time: 5:57 AM
  * To change this template use File | Settings | File Templates.
  */
-public class BillApplicationService implements IBillApplicationService{
+public class BillApplicationService implements IBillApplicationService {
     @PersistenceUnit
     private EntityManagerFactory emf;
 
     public void setEmf(EntityManagerFactory emf) {
         this.emf = emf;
     }
+
     private IGroupApplicationService groupApplicationService;
     private IUserServiceApplicationLogic userServiceApplicationLogic;
     private IBillDao billDao;
+    private IUserDao userDao;
+    private IGroupDao groupDao;
 
-    public BillApplicationService(IGroupApplicationService groupApplicationService, IUserServiceApplicationLogic userServiceApplicationLogic, IBillDao billDao) {
+    public BillApplicationService(IGroupApplicationService groupApplicationService, IUserServiceApplicationLogic userServiceApplicationLogic, IBillDao billDao, IUserDao userDao, IGroupDao groupDao) {
         this.groupApplicationService = groupApplicationService;
         this.userServiceApplicationLogic = userServiceApplicationLogic;
         this.billDao = billDao;
+        this.userDao = userDao;
+        this.groupDao = groupDao;
     }
 
     public BillCodes createBill(Integer userId, Integer groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc) {
-        EntityManager em=emf.createEntityManager();
+        EntityManager em = emf.createEntityManager();
         BillCodes billCode;
-        try{
+        try {
             em.getTransaction().begin();
-            Group group=groupApplicationService.retrieveGroupById(groupId);
-            if(group==null)
+            Group group = groupDao.retrieveGroupById(em, groupId);
+            if (group == null)
                 throw new RuntimeException();  //more specific required
-            Map<User,Double> consumerMapByUser=new HashMap<User, Double>();
-            Map<User,Double> contributorMapByUser=new HashMap<User, Double>();
-            for(int id:consumerMap.keySet()){
-                User retrievedUser=userServiceApplicationLogic.retrieveUser(id).getUserEmbedded();
-                if(retrievedUser==null)
+            Map<User, Double> consumerMapByUser = new HashMap<User, Double>();
+            Map<User, Double> contributorMapByUser = new HashMap<User, Double>();
+            for (int id : consumerMap.keySet()) {
+                User retrievedUser = userDao.retrieveUserById(em, id);
+                if (retrievedUser == null)
                     throw new RuntimeException();
-                consumerMapByUser.put(retrievedUser,consumerMap.get(id));
+                consumerMapByUser.put(retrievedUser, consumerMap.get(id));
+                System.out.println(consumerMap.get(id));
             }
-            for (int id:contributorMap.keySet()){
-                User retrievedUser=userServiceApplicationLogic.retrieveUser(id).getUserEmbedded();
-                if(retrievedUser==null)
+            for (int id : contributorMap.keySet()) {
+                User retrievedUser = userDao.retrieveUserById(em, id);
+                if (retrievedUser == null)
                     throw new RuntimeException();
-                contributorMapByUser.put(retrievedUser,contributorMap.get(id));
+                contributorMapByUser.put(retrievedUser, contributorMap.get(id));
             }
-            User billOwner = userServiceApplicationLogic.retrieveUser(userId).getUserEmbedded();
-            if(billOwner == null) {
+            User billOwner = userDao.retrieveUserById(em, userId);
+            if (billOwner == null) {
                 throw new RuntimeException();
             }
-            Bill bill=new Bill();
+            Bill bill = new Bill();
             bill.setBillOwner(billOwner);
             bill.setAssociatedGroup(group);
             bill.setConsumerMap(consumerMapByUser);
             bill.setContributorMap(contributorMapByUser);
-            billCode = billDao.createBill(em,bill);
-        }finally {
+            billCode = billDao.createBill(em, bill);
+        } finally {
             em.getTransaction().commit();
         }
         return billCode;
     }
 
-    public void editBill(int billId, int groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap,String billDesc) {
+    public void editBill(int billId, int groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 

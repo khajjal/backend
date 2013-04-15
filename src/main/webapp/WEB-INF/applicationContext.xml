@@ -59,6 +59,8 @@
         <beans:constructor-arg ref="groupApplicationService"/>
         <beans:constructor-arg ref="userServiceApplicationLogic"/>
         <beans:constructor-arg ref="billDao"/>
+        <beans:constructor-arg ref="userDao"/>
+        <beans:constructor-arg ref="groupDao"/>
     </beans:bean>
 
 

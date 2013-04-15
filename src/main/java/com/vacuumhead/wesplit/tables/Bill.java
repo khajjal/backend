@@ -21,6 +21,7 @@ public class Bill implements Serializable {
     @Column(name = "BILL_ID")
     private int billId = 1;
 
+    @Column(name = "BILL_OWNER")
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User billOwner;
