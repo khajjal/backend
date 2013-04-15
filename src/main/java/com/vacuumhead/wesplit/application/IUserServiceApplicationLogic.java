@@ -3,6 +3,7 @@ package com.vacuumhead.wesplit.application;
 import com.vacuumhead.wesplit.constants.AccountCodes;
 import com.vacuumhead.wesplit.tables.Group;
 import com.vacuumhead.wesplit.tables.User;
+import com.vacuumhead.wesplit.tables.UserAccount;
 
 import java.util.List;
 
@@ -19,5 +20,5 @@ public interface IUserServiceApplicationLogic {
     public AccountCodes loginUser(String username, String password);
     public AccountCodes checkIfUserExist(String username);
     public List<Group> retrieveAllGroupForUser(Integer accountId);
-    public User retrieveUser(Integer userId);
+    public UserAccount retrieveUser(Integer userId);
 }

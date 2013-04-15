@@ -35,6 +35,9 @@
     <beans:bean id="userDao" class="com.vacuumhead.wesplit.dao.UserDao">
     </beans:bean>
 
+    <beans:bean id="billDao" class="com.vacuumhead.wesplit.dao.BillDao">
+    </beans:bean>
+
 
 
 
@@ -50,6 +53,12 @@
     <beans:bean id="groupApplicationService" class="com.vacuumhead.wesplit.application.GroupApplicationService">
         <beans:constructor-arg ref="groupDao"/>
         <beans:constructor-arg ref="userDao"/>
+    </beans:bean>
+
+    <beans:bean id="billApplicationService" class="com.vacuumhead.wesplit.application.BillApplicationService">
+        <beans:constructor-arg ref="groupApplicationService"/>
+        <beans:constructor-arg ref="userServiceApplicationLogic"/>
+        <beans:constructor-arg ref="billDao"/>
     </beans:bean>
 
 

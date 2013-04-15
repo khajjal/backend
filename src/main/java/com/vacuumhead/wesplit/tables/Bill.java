@@ -1,7 +1,6 @@
 package com.vacuumhead.wesplit.tables;
 
 
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -15,35 +14,38 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 @Entity
-@Table(name="BILL")
+@Table(name = "BILL")
 public class Bill implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="BILL_ID")
-    private int billId=1;
+    @Column(name = "BILL_ID")
+    private int billId = 1;
 
+    @OneToOne
+    @JoinColumn(name = "USER_ID")
+    private User billOwner;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Group associatedGroup;
 
-    @ElementCollection(targetClass=com.vacuumhead.wesplit.tables.User.class)
+    @ElementCollection(targetClass = com.vacuumhead.wesplit.tables.User.class)
     @JoinTable(
-            name="CONTRIBUTOR_MAP",
-            schema="wesplit_ddb",
-            joinColumns=@JoinColumn(name="BILL_ID")
+            name = "CONTRIBUTOR_MAP",
+            schema = "wesplit_ddb",
+            joinColumns = @JoinColumn(name = "BILL_ID")
     )
-    @Column(name="CONTRIBUTOR_MAP")
-    private Map<User,Double> contributorMap=new HashMap<User, Double>();
-    @ElementCollection(targetClass=com.vacuumhead.wesplit.tables.User.class)
+    @Column(name = "CONTRIBUTOR_MAP")
+    private Map<User, Double> contributorMap = new HashMap<User, Double>();
+    @ElementCollection(targetClass = com.vacuumhead.wesplit.tables.User.class)
     @JoinTable(
-            name="CONSUMER_MAP",
-            schema="wesplit_ddb",
-            joinColumns=@JoinColumn(name="BILL_ID")
+            name = "CONSUMER_MAP",
+            schema = "wesplit_ddb",
+            joinColumns = @JoinColumn(name = "BILL_ID")
     )
-    @Column(name="CONSUMER_MAP")
-    private Map<User,Double> consumerMap=new HashMap<User, Double>();
+    @Column(name = "CONSUMER_MAP")
+    private Map<User, Double> consumerMap = new HashMap<User, Double>();
 
-    @Column(name="BILL_DESC")
+    @Column(name = "BILL_DESC")
     private String billDesc;
 
     public Bill() {
@@ -59,6 +61,15 @@ public class Bill implements Serializable {
 
     public Group getAssociatedGroup() {
         return associatedGroup;
+    }
+
+    public User getBillOwner() {
+        return billOwner;
+    }
+
+    public void setBillOwner(User billOwner) {
+
+        this.billOwner = billOwner;
     }
 
     public void setAssociatedGroup(Group associatedGroup) {

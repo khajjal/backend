@@ -1,5 +1,6 @@
 package com.vacuumhead.wesplit.application;
 
+import com.vacuumhead.wesplit.constants.BillCodes;
 import com.vacuumhead.wesplit.tables.Bill;
 import com.vacuumhead.wesplit.tables.Group;
 import com.vacuumhead.wesplit.tables.User;
@@ -15,7 +16,7 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public interface IBillApplicationService {
-    void createBill(int groupId,Map<Integer,Double> consumerMap,Map<Integer,Double> contributorMap,String billDesc);
+    BillCodes createBill(Integer userId, Integer groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc);
     void editBill(int billId,int groupId,Map<Integer,Double> consumerMap,Map<Integer,Double> contributorMap,String billDesc);
     void deleteBill(int billId);
     Bill retrieveBill(int billId);

@@ -1,5 +1,6 @@
 package com.vacuumhead.wesplit.application;
 
+import com.vacuumhead.wesplit.constants.BillCodes;
 import com.vacuumhead.wesplit.dao.IBillDao;
 import com.vacuumhead.wesplit.tables.Bill;
 import com.vacuumhead.wesplit.tables.Group;
@@ -30,9 +31,15 @@ public class BillApplicationService implements IBillApplicationService{
     private IUserServiceApplicationLogic userServiceApplicationLogic;
     private IBillDao billDao;
 
-    @Override
-    public void createBill(int groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap,String billDesc) {
+    public BillApplicationService(IGroupApplicationService groupApplicationService, IUserServiceApplicationLogic userServiceApplicationLogic, IBillDao billDao) {
+        this.groupApplicationService = groupApplicationService;
+        this.userServiceApplicationLogic = userServiceApplicationLogic;
+        this.billDao = billDao;
+    }
+
+    public BillCodes createBill(Integer userId, Integer groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc) {
         EntityManager em=emf.createEntityManager();
+        BillCodes billCode;
         try{
             em.getTransaction().begin();
             Group group=groupApplicationService.retrieveGroupById(groupId);
@@ -41,53 +48,53 @@ public class BillApplicationService implements IBillApplicationService{
             Map<User,Double> consumerMapByUser=new HashMap<User, Double>();
             Map<User,Double> contributorMapByUser=new HashMap<User, Double>();
             for(int id:consumerMap.keySet()){
-                User retrievedUser=userServiceApplicationLogic.retrieveUser(id);
+                User retrievedUser=userServiceApplicationLogic.retrieveUser(id).getUserEmbedded();
                 if(retrievedUser==null)
                     throw new RuntimeException();
                 consumerMapByUser.put(retrievedUser,consumerMap.get(id));
             }
             for (int id:contributorMap.keySet()){
-                User retrievedUser=userServiceApplicationLogic.retrieveUser(id);
+                User retrievedUser=userServiceApplicationLogic.retrieveUser(id).getUserEmbedded();
                 if(retrievedUser==null)
                     throw new RuntimeException();
                 contributorMapByUser.put(retrievedUser,contributorMap.get(id));
             }
+            User billOwner = userServiceApplicationLogic.retrieveUser(userId).getUserEmbedded();
+            if(billOwner == null) {
+                throw new RuntimeException();
+            }
             Bill bill=new Bill();
+            bill.setBillOwner(billOwner);
             bill.setAssociatedGroup(group);
             bill.setConsumerMap(consumerMapByUser);
             bill.setContributorMap(contributorMapByUser);
-            billDao.createBill(em,bill);
+            billCode = billDao.createBill(em,bill);
         }finally {
             em.getTransaction().commit();
         }
+        return billCode;
     }
 
-    @Override
     public void editBill(int billId, int groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap,String billDesc) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public void deleteBill(int billId) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public Bill retrieveBill(int billId) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public List<Bill> retrieveBills(Group group) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public List<Bill> retrieveBillByConsumer(User user) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public List<Bill> retrieveBillByContributor(User user) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }

@@ -1,5 +1,6 @@
 package com.vacuumhead.wesplit.dao;
 
+import com.vacuumhead.wesplit.constants.BillCodes;
 import com.vacuumhead.wesplit.tables.Bill;
 
 import javax.persistence.EntityManager;
@@ -12,8 +13,8 @@ import javax.persistence.EntityManager;
  * To change this template use File | Settings | File Templates.
  */
 public interface IBillDao {
-    void createBill(EntityManager entityManager,Bill Bill);
-    void retrieveBill(EntityManager entityManager,int billId);
-    void deleteBill(EntityManager entityManager,Bill bill);
-    void updateBill(EntityManager entityManager,Bill bill);
+    BillCodes createBill(EntityManager entityManager, Bill bill);
+    Bill retrieveBill(EntityManager entityManager, int billId);
+    BillCodes deleteBill(EntityManager entityManager, Bill bill);
+    BillCodes updateBill(EntityManager entityManager, Bill bill);
 }
