@@ -1,6 +1,6 @@
 package com.vacuumhead.wesplit.tables;
 
-import org.hibernate.cfg.IndexColumn;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -63,6 +63,7 @@ public class Bill implements Serializable {
 
     public void setAssociatedGroup(Group associatedGroup) {
         this.associatedGroup = associatedGroup;
+        associatedGroup.addBill(this);
     }
 
     public Map<User, Double> getContributorMap() {

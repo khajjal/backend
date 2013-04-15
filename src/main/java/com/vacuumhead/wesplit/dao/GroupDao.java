@@ -18,36 +18,36 @@ import java.util.List;
  */
 public class GroupDao implements IGroupDao {
 
-    @PersistenceUnit
+  /*  @PersistenceUnit
     private EntityManagerFactory emf;
 
     public void setEmf(EntityManagerFactory emf) {
         this.emf = emf;
-    }
+    }*/
 
     public GroupDao() {
     }
 
-    public void createGroup(Group group) {
+    public void createGroup(EntityManager entityManager,Group group) {
 
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
+        //EntityManager entityManager = emf.createEntityManager();
+        //entityManager.getTransaction().begin();
         entityManager.persist(group);
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
     }
 
-    public Group retrieveGroupById(Integer groupId) {
+    public Group retrieveGroupById(EntityManager entityManager,Integer groupId) {
 
-        EntityManager entityManager = emf.createEntityManager();
+        //EntityManager entityManager = emf.createEntityManager();
         TypedQuery<Group> query = entityManager.createQuery("select g from Group g where groupId = :groupId", Group.class);
         query.setParameter("groupId", groupId);
         List<Group> resultSet =  query.getResultList();
         return resultSet.size() > 0 ? resultSet.get(0) : null ;
     }
 
-    public Group retrieveGroupByName(String groupName) {
+    public Group retrieveGroupByName(EntityManager entityManager,String groupName) {
 
-        EntityManager entityManager = emf.createEntityManager();
+        //EntityManager entityManager = emf.createEntityManager();
         TypedQuery<Group> query = entityManager.createQuery("select g from Group g where groupName = :groupName", Group.class);
         query.setParameter("groupName", groupName);
         List<Group> resultSet =  query.getResultList();
@@ -56,15 +56,15 @@ public class GroupDao implements IGroupDao {
 
 
 
-    public void updateGroup(Group group, User user) {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
-        user=entityManager.find(User.class,user.getUserrId());
+    public void updateGroup(EntityManager entityManager,Group group) {
+        //EntityManager entityManager = emf.createEntityManager();
+        //entityManager.getTransaction().begin();
+        /*user=entityManager.find(User.class,user.getUserrId());
         group=entityManager.find(Group.class,group.getGroupId());
         user.getGroupMemberList().add(group);
         group.getUserList().add(user);
-        //group=entityManager.find(Group.class,group.getGroupId());
+        //group=entityManager.find(Group.class,group.getGroupId());*/
         entityManager.merge(group);
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
     }
 }

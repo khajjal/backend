@@ -3,6 +3,8 @@ package com.vacuumhead.wesplit.dao;
 import com.vacuumhead.wesplit.tables.Group;
 import com.vacuumhead.wesplit.tables.User;
 
+import javax.persistence.EntityManager;
+
 /**
  * Created with IntelliJ IDEA.
  * User: pratyushverma
@@ -12,9 +14,9 @@ import com.vacuumhead.wesplit.tables.User;
  */
 public interface IGroupDao {
 
-    public void createGroup(Group group);
-    public Group retrieveGroupById(Integer groupId);
-    public Group retrieveGroupByName(String groupName);
-    public void updateGroup(Group group,User user);
+    public void createGroup(EntityManager entityManager,Group group);
+    public Group retrieveGroupById(EntityManager entityManager,Integer groupId);
+    public Group retrieveGroupByName(EntityManager entityManager,String groupName);
+    public void updateGroup(EntityManager entityManager,Group group);
 
 }

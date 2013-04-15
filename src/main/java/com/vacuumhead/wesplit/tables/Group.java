@@ -39,6 +39,9 @@ public class Group implements Serializable {
     @OneToMany(mappedBy = "associatedGroup",cascade = CascadeType.ALL)
     private List<Bill> billList=new ArrayList<Bill>();
 
+    public void addBill(Bill bill){
+       billList.add(bill);
+    }
     public List<User> getAdminList() {
         return adminList;
     }

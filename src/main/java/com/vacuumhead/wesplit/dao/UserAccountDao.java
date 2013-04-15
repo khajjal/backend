@@ -16,29 +16,30 @@ import java.util.List;
  * Time: 1:08 AM
  * To change this template use File | Settings | File Templates.
  */
+
 public class UserAccountDao implements  IUserAccountDao {
 
-    @PersistenceUnit
+   /* @PersistenceUnit
     private EntityManagerFactory emf;
 
     public void setEmf(EntityManagerFactory emf) {
         this.emf = emf;
-    }
+    }*/
 
     public UserAccountDao() {
     }
 
-    public UserAccount retrieveUserAccount(Integer id) {
-        EntityManager entityManager = emf.createEntityManager();
+    public UserAccount retrieveUserAccount(EntityManager entityManager,Integer id) {
+       // EntityManager entityManager = emf.createEntityManager();
         UserAccount userAccount;
-        entityManager.getTransaction().begin();
+        //entityManager.getTransaction().begin();
         userAccount = entityManager.find(UserAccount.class ,id);
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
         return userAccount ;
     }
 
-    public UserAccount retrieveUserAccount(String username) {
-        EntityManager entityManager = emf.createEntityManager();
+    public UserAccount retrieveUserAccount(EntityManager entityManager,String username) {
+        //EntityManager entityManager = emf.createEntityManager();
         TypedQuery<UserAccount> query = entityManager.createQuery("select l from UserAccount l where username = :param1", UserAccount.class);
         query.setParameter("param1", (String)username);
         System.out.println("12334" +username +" " +username.getClass());
@@ -47,24 +48,24 @@ public class UserAccountDao implements  IUserAccountDao {
         return account;
     }
 
-    public void createUserAccount(UserAccount userAccount) {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
+    public void createUserAccount(EntityManager entityManager,UserAccount userAccount) {
+        //EntityManager entityManager = emf.createEntityManager();
+        //entityManager.getTransaction().begin();
         entityManager.persist(userAccount);
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
     }
 
-    public void updateUserAccount(UserAccount userAccount) {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
+    public void updateUserAccount(EntityManager entityManager,UserAccount userAccount) {
+        //EntityManager entityManager = emf.createEntityManager();
+        //entityManager.getTransaction().begin();
         entityManager.merge(userAccount);
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
     }
 
-    public void deleteUserAccount(UserAccount userAccount) {
-        EntityManager entityManager = emf.createEntityManager();
-        entityManager.getTransaction().begin();
+    public void deleteUserAccount(EntityManager entityManager,UserAccount userAccount) {
+        //EntityManager entityManager = emf.createEntityManager();
+        //entityManager.getTransaction().begin();
         entityManager.remove(userAccount);
-        entityManager.getTransaction().commit();
+        //entityManager.getTransaction().commit();
     }
 }

@@ -3,6 +3,8 @@ package com.vacuumhead.wesplit.dao;
 import com.vacuumhead.wesplit.tables.User;
 import com.vacuumhead.wesplit.tables.UserAccount;
 
+import javax.persistence.EntityManager;
+
 /**
  * Created with IntelliJ IDEA.
  * User: shuklar
@@ -11,9 +13,9 @@ import com.vacuumhead.wesplit.tables.UserAccount;
  * To change this template use File | Settings | File Templates.
  */
 public interface IUserAccountDao {
-    public UserAccount retrieveUserAccount(Integer id);
-    public UserAccount retrieveUserAccount(String userName);
-    public void createUserAccount(UserAccount userAccount);
-    public void updateUserAccount(UserAccount userAccount);
-    public void deleteUserAccount(UserAccount userAccount);
+    public UserAccount retrieveUserAccount(EntityManager entityManager,Integer id);
+    public UserAccount retrieveUserAccount(EntityManager entityManager,String userName);
+    public void createUserAccount(EntityManager entityManager,UserAccount userAccount);
+    public void updateUserAccount(EntityManager entityManager,UserAccount userAccount);
+    public void deleteUserAccount(EntityManager entityManager,UserAccount userAccount);
 }

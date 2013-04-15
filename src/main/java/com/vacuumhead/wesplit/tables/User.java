@@ -28,7 +28,7 @@ public class User implements Serializable {
     @ManyToMany(mappedBy = "userList",cascade = CascadeType.ALL)
     private List<Group> groupMemberList = new ArrayList<Group>();
 
-    @ManyToMany(mappedBy = "adminList",cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "adminList",cascade = CascadeType.MERGE)
     private List<Group> groupAdminList = new ArrayList<Group>();
 
     public User() {

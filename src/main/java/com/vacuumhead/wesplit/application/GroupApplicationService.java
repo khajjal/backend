@@ -5,6 +5,10 @@ import com.vacuumhead.wesplit.dao.IUserDao;
 import com.vacuumhead.wesplit.tables.Group;
 import com.vacuumhead.wesplit.tables.User;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+
 /**
  * Created with IntelliJ IDEA.
  * User: pratyushverma
@@ -13,6 +17,12 @@ import com.vacuumhead.wesplit.tables.User;
  * To change this template use File | Settings | File Templates.
  */
 public class GroupApplicationService implements IGroupApplicationService {
+    @PersistenceUnit
+    private EntityManagerFactory emf;
+
+    public void setEmf(EntityManagerFactory emf) {
+        this.emf = emf;
+    }
 
     private IGroupDao groupDao;
     private IUserDao userDao;
@@ -23,52 +33,83 @@ public class GroupApplicationService implements IGroupApplicationService {
     }
 
     public Group createGroup(String groupName, Integer accountId) {
-        if(retrieveGroupByName(groupName) != null) {
-            return null;
-        }
-        //if user exists
-        User user = userDao.retrieveUserById(accountId);
-        if(user==null){
+        EntityManager entityManager = emf.createEntityManager();
+        try{
+            entityManager.getTransaction().begin();
+            if(retrieveGroupByName(groupName) != null) {
+                return null;
+            }
+            //if user exists
+            User user = userDao.retrieveUserById(entityManager,accountId);
+            if(user==null){
                 return  null;
+            }
+            Group newGroup = new Group(groupName);
+            newGroup.getUserList().add(user);
+            newGroup.getAdminList().add(user);
+            user.getGroupAdminList().add(newGroup);
+            //userDao.updateUser(entityManager,user);
+            user.getGroupMemberList().add(newGroup);
+            groupDao.createGroup(entityManager,newGroup);
+
+            //groupDao.updateGroup(newGroup,user);
+
+            return newGroup;
+        }   finally {
+            entityManager.getTransaction().commit();
         }
-        Group newGroup = new Group(groupName);
-        groupDao.createGroup(newGroup);
-       // newGroup.getAdminList().add(user);
-        //user.getGroupAdminList().add(newGroup);
-        //user.getGroupMemberList().add(newGroup);
-        groupDao.updateGroup(newGroup,user);
-        return newGroup;
+
     }
 
     public Group retrieveGroupByName(String groupName) {
-        return groupDao.retrieveGroupByName(groupName);
+        EntityManager entityManager = emf.createEntityManager();
+
+            return groupDao.retrieveGroupByName(entityManager,groupName);
+
+
     }
 
     public Group retrieveGroupById(Integer groupId) {
-        return groupDao.retrieveGroupById(groupId);
+        EntityManager entityManager = emf.createEntityManager();
+
+        return groupDao.retrieveGroupById(entityManager,groupId);
     }
 
     public Group addMembersToGroup(Integer groupId, Integer accountId) {
-        User user = userDao.retrieveUserById(accountId);
-        Group group = groupDao.retrieveGroupById(groupId);
-        user.getGroupMemberList().add(group);
-        group.getUserList().add(user);
+        EntityManager entityManager = emf.createEntityManager();
+        try{
+            entityManager.getTransaction().begin();
+            User user = userDao.retrieveUserById(entityManager,accountId);
+            Group group = groupDao.retrieveGroupById(entityManager,groupId);
+            user.getGroupMemberList().add(group);
+            group.getUserList().add(user);
 
-        groupDao.updateGroup(group,user);
-        return group;
+            groupDao.updateGroup(entityManager,group);
+            return group;
+        }finally {
+            entityManager.getTransaction().commit();
+        }
+
     }
 
     public Group addAdminToGroup(Integer groupId, Integer accountId) {
-        User user = userDao.retrieveUserById(accountId);
-        Group group = groupDao.retrieveGroupById(groupId);
+        EntityManager entityManager = emf.createEntityManager();
+        try{
+            entityManager.getTransaction().begin();
+        User user = userDao.retrieveUserById(entityManager,accountId);
+        Group group = groupDao.retrieveGroupById(entityManager,groupId);
         group.getAdminList().add(user);
-        groupDao.updateGroup(group,user);
+        groupDao.updateGroup(entityManager,group);
         return group;
+        }finally {
+            entityManager.getTransaction().commit();
+        }
     }
 
-    public boolean isAdmin(Integer groupId, Integer accountId) {
-        User user = userDao.retrieveUserById(accountId);
-        Group group = groupDao.retrieveGroupById(groupId);
-        return group.getUserList().contains(user);
+    public boolean isAdminOfGroup(Integer groupId, Integer accountId) {
+        EntityManager entityManager = emf.createEntityManager();
+        User user = userDao.retrieveUserById(entityManager,accountId);
+        Group group = groupDao.retrieveGroupById(entityManager,groupId);
+        return group.getAdminList().contains(user);
     }
 }
