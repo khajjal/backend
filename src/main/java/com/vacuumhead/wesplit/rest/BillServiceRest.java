@@ -27,7 +27,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping("/group")
+@RequestMapping("/bill")
 public class BillServiceRest {
 
     @Autowired

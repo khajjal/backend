@@ -59,7 +59,6 @@ public class BillApplicationService implements IBillApplicationService {
                 if (retrievedUser == null)
                     throw new RuntimeException();
                 consumerMapByUser.put(retrievedUser, consumerMap.get(id));
-                System.out.println(consumerMap.get(id));
             }
             for (int id : contributorMap.keySet()) {
                 User retrievedUser = userDao.retrieveUserById(em, id);
@@ -72,6 +71,7 @@ public class BillApplicationService implements IBillApplicationService {
                 throw new RuntimeException();
             }
             Bill bill = new Bill();
+            bill.setBillDesc(billDesc);
             bill.setBillOwner(billOwner);
             bill.setAssociatedGroup(group);
             bill.setConsumerMap(consumerMapByUser);

@@ -36,9 +36,9 @@ public class GroupApplicationService implements IGroupApplicationService {
         EntityManager entityManager = emf.createEntityManager();
         try{
             entityManager.getTransaction().begin();
-            if(retrieveGroupByName(groupName) != null) {
-                return null;
-            }
+//            if(retrieveGroupByName(groupName) != null) {
+//                return null;
+//            }
             //if user exists
             User user = userDao.retrieveUserById(entityManager,accountId);
             if(user==null){

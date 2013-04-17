@@ -21,7 +21,6 @@ public class Bill implements Serializable {
     @Column(name = "BILL_ID")
     private int billId = 1;
 
-    @Column(name = "BILL_OWNER")
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User billOwner;
@@ -29,7 +28,8 @@ public class Bill implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL)
     private Group associatedGroup;
 
-    @ElementCollection(targetClass = com.vacuumhead.wesplit.tables.User.class)
+    @ElementCollection(targetClass = Double.class)
+    @MapKeyClass(User.class)
     @JoinTable(
             name = "CONTRIBUTOR_MAP",
             schema = "wesplit_ddb",
@@ -37,7 +37,9 @@ public class Bill implements Serializable {
     )
     @Column(name = "CONTRIBUTOR_MAP")
     private Map<User, Double> contributorMap = new HashMap<User, Double>();
-    @ElementCollection(targetClass = com.vacuumhead.wesplit.tables.User.class)
+
+    @ElementCollection(targetClass = Double.class)
+    @MapKeyClass(User.class)
     @JoinTable(
             name = "CONSUMER_MAP",
             schema = "wesplit_ddb",
@@ -46,7 +48,10 @@ public class Bill implements Serializable {
     @Column(name = "CONSUMER_MAP")
     private Map<User, Double> consumerMap = new HashMap<User, Double>();
 
-    @Column(name = "BILL_DESC")
+    @Column(
+            name = "BILL_DESC",
+            columnDefinition = "text"
+    )
     private String billDesc;
 
     public Bill() {
