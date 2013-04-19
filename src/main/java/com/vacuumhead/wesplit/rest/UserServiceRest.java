@@ -1,9 +1,12 @@
 package com.vacuumhead.wesplit.rest;
 
+import com.google.gson.Gson;
+import com.vacuumhead.wesplit.ViewObject.UserViewObject;
 import com.vacuumhead.wesplit.application.ISessionApplicationService;
 import com.vacuumhead.wesplit.application.IUserServiceApplicationLogic;
 import com.vacuumhead.wesplit.application.UserServiceApplicationLogic;
-import com.vacuumhead.wesplit.constants.AccountCodes;
+import com.vacuumhead.wesplit.constants.HttpResponseCode;
+import com.vacuumhead.wesplit.responseobject.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,9 +48,11 @@ public class UserServiceRest {
     @ResponseBody
     ResponseEntity<String> createUser(@PathVariable("user") String user, @PathVariable("password") String password, HttpServletRequest request) {
 
-        AccountCodes responseCode = userServiceApplicationLogic.createUser(user, password);
+        UserViewObject userObject = userServiceApplicationLogic.createUser(user, password);
 
-        return new ResponseEntity<String>(responseCode.toString(),
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, userObject);
+        String responseJson = new Gson().toJson(responseWrapper);
+        return new ResponseEntity<String>(responseJson,
                 new HttpHeaders(), HttpStatus.OK);
 
     }
@@ -57,9 +62,11 @@ public class UserServiceRest {
     @ResponseBody
     ResponseEntity<String> checkExistUser(@PathVariable("user") String user, HttpServletRequest request) {
 
-        AccountCodes responseCode = userServiceApplicationLogic.checkIfUserExist(user);
+        boolean exist = userServiceApplicationLogic.checkIfUserExist(user);
 
-        return new ResponseEntity<String>(responseCode.toString(),
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, exist);
+        String responseJson = new Gson().toJson(responseWrapper);
+        return new ResponseEntity<String>(responseJson,
                 new HttpHeaders(), HttpStatus.OK);
 
     }
@@ -70,17 +77,19 @@ public class UserServiceRest {
     ResponseEntity<String> loginUser(@PathVariable("user") String user, @PathVariable("password") String password, HttpServletRequest request) {
 
 
-
-        AccountCodes responseCode = userServiceApplicationLogic.loginUser(user, password);
-        if(responseCode.equals(AccountCodes.CREDENTIALS_VALID)) {
+        UserViewObject userObject = userServiceApplicationLogic.loginUser(user, password);
+        String responseJson = null;
+        if (userObject != null) {
             Map<String, String> dataMap = new HashMap<String, String>();
             dataMap.put("username", user);
             sessionApplicationService.addDataToSession(request.getSession(), dataMap);
+            ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, userObject);
+            responseJson = new Gson().toJson(responseWrapper);
         }
 
-        return new ResponseEntity<String>(responseCode.toString(),
-                new HttpHeaders(), HttpStatus.OK);
 
+        return new ResponseEntity<String>(responseJson,
+                new HttpHeaders(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/logoutUser/{user}", method = RequestMethod.GET)

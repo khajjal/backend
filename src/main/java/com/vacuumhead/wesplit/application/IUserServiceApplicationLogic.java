@@ -1,9 +1,7 @@
 package com.vacuumhead.wesplit.application;
 
-import com.vacuumhead.wesplit.constants.AccountCodes;
-import com.vacuumhead.wesplit.tables.Group;
-import com.vacuumhead.wesplit.tables.User;
-import com.vacuumhead.wesplit.tables.UserAccount;
+import com.vacuumhead.wesplit.ViewObject.GroupViewObject;
+import com.vacuumhead.wesplit.ViewObject.UserViewObject;
 
 import java.util.List;
 
@@ -16,9 +14,9 @@ import java.util.List;
  */
 public interface IUserServiceApplicationLogic {
 
-    public AccountCodes createUser(String username, String password);
-    public AccountCodes loginUser(String username, String password);
-    public AccountCodes checkIfUserExist(String username);
-    public List<Group> retrieveAllGroupForUser(Integer accountId);
-    public UserAccount retrieveUser(Integer userId);
+    public UserViewObject createUser(String username, String password);
+    public UserViewObject loginUser(String username, String password);
+    public boolean checkIfUserExist(String username);
+    public List<GroupViewObject> retrieveAllGroupForUser(Integer accountId);
+    public UserViewObject retrieveUser(Integer userId);
 }

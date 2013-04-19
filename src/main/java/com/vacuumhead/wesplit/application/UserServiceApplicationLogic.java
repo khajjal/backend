@@ -1,6 +1,7 @@
 package com.vacuumhead.wesplit.application;
 
-import com.vacuumhead.wesplit.constants.AccountCodes;
+import com.vacuumhead.wesplit.ViewObject.GroupViewObject;
+import com.vacuumhead.wesplit.ViewObject.UserViewObject;
 import com.vacuumhead.wesplit.dao.IUserAccountDao;
 import com.vacuumhead.wesplit.dao.IUserDao;
 import com.vacuumhead.wesplit.dao.UserAccountDao;
@@ -11,9 +12,8 @@ import com.vacuumhead.wesplit.tables.UserAccount;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -24,12 +24,13 @@ import java.util.Map;
  */
 
 public class UserServiceApplicationLogic implements IUserServiceApplicationLogic {
-     @PersistenceUnit
-private EntityManagerFactory emf;
+    @PersistenceUnit
+    private EntityManagerFactory emf;
 
-public void setEmf(EntityManagerFactory emf) {
-    this.emf = emf;
-}
+    public void setEmf(EntityManagerFactory emf) {
+        this.emf = emf;
+    }
+
     private IUserAccountDao userAccountDao;
     private IUserDao userDao;
 
@@ -41,73 +42,87 @@ public void setEmf(EntityManagerFactory emf) {
     public UserServiceApplicationLogic(UserAccountDao userAccountDao) {
     }
 
-    public UserAccount retrieveUser(Integer userId) {
-        EntityManager entityManager = emf.createEntityManager();
+    public UserViewObject retrieveUser(Integer userId) {
+        EntityManager em = emf.createEntityManager();
         UserAccount user;
-        try{
-            entityManager.getTransaction().begin();
-            user = retrieveUserAccount(entityManager, userId);
-        }     finally {
-            entityManager.getTransaction().commit();
+        try {
+            em.getTransaction().begin();
+            user = retrieveUserAccount(em, userId);
+        } finally {
+            em.getTransaction().commit();
         }
-        return user;
+        return new UserViewObject(user);
     }
 
-    public AccountCodes createUser(String username, String password) {
-        EntityManager entityManager = emf.createEntityManager();
-        try{
-            entityManager.getTransaction().begin();
-            if (checkExistUser(entityManager,username)) {
-                return AccountCodes.ACCOUNT_ALREADY_EXIST;
-            }
-            UserAccount userAccount=  new UserAccount(username, password);
-            User user=new User();
+    public UserViewObject createUser(String username, String password) {
+        EntityManager em = emf.createEntityManager();
+        UserAccount userAccount;
+        try {
+            em.getTransaction().begin();
+            userAccount = new UserAccount(username, password);
+            User user = new User();
             userAccount.setUserEmbedded(user);
             user.setUserAccountEmbedded(userAccount);
-            userAccountDao.createUserAccount(entityManager,userAccount);
-            return AccountCodes.ACCOUNT_CREATION_SUCCESSFUL;
-        }     finally {
-            entityManager.getTransaction().commit();
+            userAccountDao.createUserAccount(em, userAccount);
+
+        } finally {
+            em.getTransaction().commit();
         }
-
+        return new UserViewObject(userAccount);
     }
 
-    public AccountCodes loginUser(String username, String password) {
-        EntityManager entityManager = emf.createEntityManager();
-        UserAccount userInfo = retrieveUserAccount(entityManager,username);
-        if (userInfo == null) {
-            return AccountCodes.ACCOUNT_DOES_NOT_EXIST;
+    public UserViewObject loginUser(String username, String password) {
+        EntityManager em = emf.createEntityManager();
+        UserAccount userInfo;
+        try {
+            em.getTransaction().begin();
+            userInfo = retrieveUserAccount(em, username);
+
+        } finally {
+            em.getTransaction().commit();
         }
+        if(userInfo == null)
+            return null;
+        return new UserViewObject(userInfo);
+    }
 
-        if (userInfo.getPassword().equals(password)) {
-            return AccountCodes.CREDENTIALS_VALID;
-        } else {
-            return AccountCodes.CREDENTIALS_INVALID;
+    public boolean checkIfUserExist(String username) {
+        EntityManager em = emf.createEntityManager();
+        boolean exist;
+        try {
+            em.getTransaction().begin();
+            exist = checkExistUser(em, username);
+        } finally {
+            em.getTransaction().commit();
         }
+        return exist;
     }
 
-    public AccountCodes checkIfUserExist(String username) {
-        EntityManager entityManager = emf.createEntityManager();
-        return checkExistUser(entityManager,username) ? AccountCodes.ACCOUNT_ALREADY_EXIST : AccountCodes.ACCOUNT_DOES_NOT_EXIST;
+    public List<GroupViewObject> retrieveAllGroupForUser(Integer accountId) {
+        EntityManager em = emf.createEntityManager();
+        List<GroupViewObject> groupViewObjectList = new ArrayList<GroupViewObject>();
+        User user;
+        try {
+            em.getTransaction().begin();
+            user = userDao.retrieveUserById(em, accountId);
+            for(Group group : user.getGroupMemberList()) {
+                groupViewObjectList.add(new GroupViewObject(group));
+            }
+        } finally {
+            em.getTransaction().commit();
+        }
+        return groupViewObjectList;
     }
 
-    public List<Group> retrieveAllGroupForUser(Integer accountId) {
-        EntityManager entityManager = emf.createEntityManager();
-        Map<String, Group> groupMap = new HashMap<String, Group>();
-
-        User user = userDao.retrieveUserById(entityManager,accountId);
-        return user.getGroupMemberList();
+    private boolean checkExistUser(EntityManager em, String username) {
+        return userAccountDao.retrieveUserAccount(em, username) != null;
     }
 
-    private boolean checkExistUser(EntityManager entityManager, String username) {
-        return userAccountDao.retrieveUserAccount(entityManager,username) != null;
+    private UserAccount retrieveUserAccount(EntityManager em, String username) {
+        return userAccountDao.retrieveUserAccount(em, username);
     }
 
-    private UserAccount retrieveUserAccount(EntityManager entityManager,String username) {
-        return userAccountDao.retrieveUserAccount(entityManager,username);
-    }
-
-    private UserAccount retrieveUserAccount(EntityManager entityManager,Integer accountId) {
-        return userAccountDao.retrieveUserAccount(entityManager,accountId);
+    private UserAccount retrieveUserAccount(EntityManager em, Integer accountId) {
+        return userAccountDao.retrieveUserAccount(em, accountId);
     }
 }
