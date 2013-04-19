@@ -1,6 +1,6 @@
 package com.vacuumhead.wesplit.application;
 
-import com.vacuumhead.wesplit.constants.BillCodes;
+import com.vacuumhead.wesplit.ViewObject.BillViewObject;
 import com.vacuumhead.wesplit.dao.IBillDao;
 import com.vacuumhead.wesplit.dao.IGroupDao;
 import com.vacuumhead.wesplit.dao.IUserDao;
@@ -11,6 +11,7 @@ import com.vacuumhead.wesplit.tables.User;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +45,9 @@ public class BillApplicationService implements IBillApplicationService {
         this.groupDao = groupDao;
     }
 
-    public BillCodes createBill(Integer userId, Integer groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc) {
+    public BillViewObject createBill(Integer userId, Integer groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc) {
         EntityManager em = emf.createEntityManager();
-        BillCodes billCode;
+        Bill bill;
         try {
             em.getTransaction().begin();
             Group group = groupDao.retrieveGroupById(em, groupId);
@@ -70,40 +71,109 @@ public class BillApplicationService implements IBillApplicationService {
             if (billOwner == null) {
                 throw new RuntimeException();
             }
-            Bill bill = new Bill();
+            bill = new Bill();
             bill.setBillDesc(billDesc);
             bill.setBillOwner(billOwner);
             bill.setAssociatedGroup(group);
             bill.setConsumerMap(consumerMapByUser);
             bill.setContributorMap(contributorMapByUser);
-            billCode = billDao.createBill(em, bill);
+            billDao.createBill(em, bill);
         } finally {
             em.getTransaction().commit();
         }
-        return billCode;
+        return new BillViewObject(bill);
     }
 
-    public void editBill(int billId, int groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public BillViewObject editBill(int billId, int userId, int groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc) {
+        EntityManager em = emf.createEntityManager();
+        Bill bill;
+        try {
+            em.getTransaction().begin();
+            bill = billDao.retrieveBill(em, billId);
+            billDao.updateBill(em, bill);
+
+        } finally {
+            em.getTransaction().commit();
+        }
+        return new BillViewObject(bill);
     }
 
-    public void deleteBill(int billId) {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void deleteBill(int billId, int userId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            Bill bill = billDao.retrieveBill(em, billId);
+            User user = userDao.retrieveUserById(em, userId);
+            if(bill.getContributorMap().containsKey(user)) {
+                billDao.deleteBill(em, bill);
+            }
+        } finally {
+            em.getTransaction().commit();
+        }
     }
 
-    public Bill retrieveBill(int billId) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public BillViewObject retrieveBill(int billId) {
+        EntityManager em = emf.createEntityManager();
+        Bill bill;
+        try {
+            em.getTransaction().begin();
+            bill = billDao.retrieveBill(em, billId);
+        } finally {
+            em.getTransaction().commit();
+        }
+        return new BillViewObject(bill);
     }
 
-    public List<Bill> retrieveBills(Group group) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<BillViewObject> retrieveBillByGroup(Integer groupId) {
+        EntityManager em = emf.createEntityManager();
+        List<BillViewObject> billViewObjectList = new ArrayList<BillViewObject>();
+        try {
+            em.getTransaction().begin();
+            Group group = groupDao.retrieveGroupById(em, groupId);
+            for(Bill bill : group.getBillList()) {
+                billViewObjectList.add(new BillViewObject(bill));
+            }
+        } finally {
+            em.getTransaction().commit();
+        }
+        return billViewObjectList;
     }
 
-    public List<Bill> retrieveBillByConsumer(User user) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<BillViewObject> retrieveBillByConsumer(Integer userId) {
+        EntityManager em = emf.createEntityManager();
+        List<BillViewObject> billViewObjectList = new ArrayList<BillViewObject>();
+        try {
+            em.getTransaction().begin();
+            User user = userDao.retrieveUserById(em, userId);
+            for(Group group : user.getGroupMemberList()) {
+                for(Bill bill : group.getBillList()) {
+                    if(bill.getConsumerMap().containsKey(user)) {
+                        billViewObjectList.add(new BillViewObject(bill));
+                    }
+                }
+            }
+        } finally {
+            em.getTransaction().commit();
+        }
+        return billViewObjectList;
     }
 
-    public List<Bill> retrieveBillByContributor(User user) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<BillViewObject> retrieveBillByContributor(Integer userId) {
+        EntityManager em = emf.createEntityManager();
+        List<BillViewObject> billViewObjectList = new ArrayList<BillViewObject>();
+        try {
+            em.getTransaction().begin();
+            User user = userDao.retrieveUserById(em, userId);
+            for(Group group : user.getGroupMemberList()) {
+                for(Bill bill : group.getBillList()) {
+                    if(bill.getContributorMap().containsKey(user)) {
+                        billViewObjectList.add(new BillViewObject(bill));
+                    }
+                }
+            }
+        } finally {
+            em.getTransaction().commit();
+        }
+        return billViewObjectList;
     }
 }

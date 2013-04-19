@@ -1,7 +1,10 @@
 package com.vacuumhead.wesplit.rest;
 
+import com.google.gson.Gson;
+import com.vacuumhead.wesplit.ViewObject.GroupViewObject;
 import com.vacuumhead.wesplit.application.IGroupApplicationService;
-import com.vacuumhead.wesplit.tables.Group;
+import com.vacuumhead.wesplit.constants.HttpResponseCode;
+import com.vacuumhead.wesplit.responseobject.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,9 +42,11 @@ public class GroupManager {
     ResponseEntity<String> createGroup(@PathVariable("groupname") String groupName, @PathVariable("user") String _user, HttpServletRequest request) {
 
         Integer accountId = Integer.parseInt(_user);
-        Group group = groupApplicationService.createGroup(groupName, accountId);
+        GroupViewObject group = groupApplicationService.createGroup(groupName, accountId);
 
-        return new ResponseEntity<String>(group.toString(),
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, group);
+        String responseJson = new Gson().toJson(responseWrapper);
+        return new ResponseEntity<String>(responseJson,
                 new HttpHeaders(), HttpStatus.OK);
 
     }
@@ -51,11 +56,12 @@ public class GroupManager {
     @ResponseBody
     ResponseEntity<String> getGroupByName(@PathVariable("groupname") String _groupName, HttpServletRequest request) {
 
-        Group group = groupApplicationService.retrieveGroupByName(_groupName);
+        GroupViewObject group = groupApplicationService.retrieveGroupByName(_groupName);
 
-        return new ResponseEntity<String>(group.toString(),
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, group);
+        String responseJson = new Gson().toJson(responseWrapper);
+        return new ResponseEntity<String>(responseJson,
                 new HttpHeaders(), HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/getGroupById/{groupId}", method = RequestMethod.GET)
@@ -64,9 +70,11 @@ public class GroupManager {
     ResponseEntity<String> getGroupById(@PathVariable("groupId") String _groupId, HttpServletRequest request) {
 
         Integer groupId = Integer.parseInt(_groupId);
-        Group group = groupApplicationService.retrieveGroupById(groupId);
+        GroupViewObject group = groupApplicationService.retrieveGroupById(groupId);
 
-        return new ResponseEntity<String>(group.toString(),
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, group);
+        String responseJson = new Gson().toJson(responseWrapper);
+        return new ResponseEntity<String>(responseJson,
                 new HttpHeaders(), HttpStatus.OK);
 
     }
@@ -78,9 +86,11 @@ public class GroupManager {
 
         Integer groupId = Integer.parseInt(_groupId);
         Integer accountId = Integer.parseInt(_userId);
-        Group group = groupApplicationService.addMembersToGroup(groupId, accountId);
+        GroupViewObject group = groupApplicationService.addMembersToGroup(groupId, accountId);
 
-        return new ResponseEntity<String>(group.toString(),
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, group);
+        String responseJson = new Gson().toJson(responseWrapper);
+        return new ResponseEntity<String>(responseJson,
                 new HttpHeaders(), HttpStatus.OK);
 
     }
@@ -92,11 +102,12 @@ public class GroupManager {
 
         Integer groupId = Integer.parseInt(_groupId);
         Integer accountId = Integer.parseInt(_userId);
-        Group group = groupApplicationService.addAdminToGroup(groupId, accountId);
+        GroupViewObject group = groupApplicationService.addAdminToGroup(groupId, accountId);
 
-        return new ResponseEntity<String>(group.toString(),
+        ResponseWrapper responseWrapper = new ResponseWrapper(request.getRequestURI(), HttpResponseCode.ok, group);
+        String responseJson = new Gson().toJson(responseWrapper);
+        return new ResponseEntity<String>(responseJson,
                 new HttpHeaders(), HttpStatus.OK);
-
     }
 
     @RequestMapping(value = "/isAdmin/{groupId}/{userId}", method = RequestMethod.GET)

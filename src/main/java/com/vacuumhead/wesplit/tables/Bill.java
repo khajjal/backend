@@ -25,7 +25,7 @@ public class Bill implements Serializable {
     @JoinColumn(name = "USER_ID")
     private User billOwner;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Group associatedGroup;
 
     @ElementCollection(targetClass = Double.class)

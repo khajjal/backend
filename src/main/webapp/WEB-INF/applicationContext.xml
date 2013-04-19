@@ -104,4 +104,30 @@
 
     <context:component-scan base-package="com.vacuumhead.wesplit"/>
 
+
+    <!-- Connection Factory -->
+    <beans:bean id="rabbitConnFactory"
+        class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+        <beans:constructor-arg>
+            <beans:value>localhost</beans:value>
+        </beans:constructor-arg>
+        <beans:property name="username" value="guest" />
+        <beans:property name="password" value="guest" />
+        <beans:property name="virtualHost" value="/" />
+        <beans:property name="port" value="5672" />
+    </beans:bean>
+
+    <!-- Spring AMQP Template -->
+    <beans:bean id="template"
+        class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <beans:property name="connectionFactory" ref="rabbitConnFactory" />
+        <beans:property name="routingKey" value="test.queue"/>
+        <beans:property name="queue" value="test.queue"/>
+    </beans:bean>
+
+    <!-- Spring AMQP Admin -->
+    <beans:bean id="admin" class="org.springframework.amqp.rabbit.core.RabbitAdmin">
+        <beans:constructor-arg ref="rabbitConnFactory" />
+    </beans:bean>
+
 </beans:beans>

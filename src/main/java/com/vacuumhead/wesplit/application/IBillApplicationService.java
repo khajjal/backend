@@ -1,9 +1,6 @@
 package com.vacuumhead.wesplit.application;
 
-import com.vacuumhead.wesplit.constants.BillCodes;
-import com.vacuumhead.wesplit.tables.Bill;
-import com.vacuumhead.wesplit.tables.Group;
-import com.vacuumhead.wesplit.tables.User;
+import com.vacuumhead.wesplit.ViewObject.BillViewObject;
 
 import java.util.List;
 import java.util.Map;
@@ -16,11 +13,11 @@ import java.util.Map;
  * To change this template use File | Settings | File Templates.
  */
 public interface IBillApplicationService {
-    BillCodes createBill(Integer userId, Integer groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc);
-    void editBill(int billId,int groupId,Map<Integer,Double> consumerMap,Map<Integer,Double> contributorMap,String billDesc);
-    void deleteBill(int billId);
-    Bill retrieveBill(int billId);
-    List<Bill> retrieveBills(Group group);
-    List<Bill> retrieveBillByConsumer(User user);
-    List<Bill> retrieveBillByContributor(User user);
+    BillViewObject createBill(Integer userId, Integer groupId, Map<Integer, Double> consumerMap, Map<Integer, Double> contributorMap, String billDesc);
+    BillViewObject editBill(int billId, int userId, int groupId,Map<Integer,Double> consumerMap,Map<Integer,Double> contributorMap,String billDesc);
+    void deleteBill(int billId, int userId);
+    BillViewObject retrieveBill(int billId);
+    List<BillViewObject> retrieveBillByGroup(Integer groupId);
+    List<BillViewObject> retrieveBillByConsumer(Integer userId);
+    List<BillViewObject> retrieveBillByContributor(Integer userId);
 }

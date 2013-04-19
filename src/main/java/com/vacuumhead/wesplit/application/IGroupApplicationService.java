@@ -1,6 +1,6 @@
 package com.vacuumhead.wesplit.application;
 
-import com.vacuumhead.wesplit.tables.Group;
+import com.vacuumhead.wesplit.ViewObject.GroupViewObject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,11 +11,11 @@ import com.vacuumhead.wesplit.tables.Group;
  */
 public interface IGroupApplicationService {
 
-    public Group createGroup(String groupName, Integer accountId);
-    public Group retrieveGroupByName(String groupName);
-    public Group retrieveGroupById(Integer groupId);
-    public Group addMembersToGroup(Integer groupId, Integer accountId);
-    public Group addAdminToGroup(Integer groupId, Integer accountId);
+    public GroupViewObject createGroup(String groupName, Integer accountId);
+    public GroupViewObject retrieveGroupByName(String groupName);
+    public GroupViewObject retrieveGroupById(Integer groupId);
+    public GroupViewObject addMembersToGroup(Integer groupId, Integer accountId);
+    public GroupViewObject addAdminToGroup(Integer groupId, Integer accountId);
     public boolean isAdminOfGroup(Integer groupId, Integer accountId);
 
 }

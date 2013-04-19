@@ -1,5 +1,6 @@
 package com.vacuumhead.wesplit.application;
 
+import com.vacuumhead.wesplit.ViewObject.GroupViewObject;
 import com.vacuumhead.wesplit.dao.IGroupDao;
 import com.vacuumhead.wesplit.dao.IUserDao;
 import com.vacuumhead.wesplit.tables.Group;
@@ -32,84 +33,89 @@ public class GroupApplicationService implements IGroupApplicationService {
         this.userDao = userDao;
     }
 
-    public Group createGroup(String groupName, Integer accountId) {
+    public GroupViewObject createGroup(String groupName, Integer accountId) {
         EntityManager entityManager = emf.createEntityManager();
-        try{
+        Group newGroup;
+        try {
             entityManager.getTransaction().begin();
-//            if(retrieveGroupByName(groupName) != null) {
-//                return null;
-//            }
-            //if user exists
-            User user = userDao.retrieveUserById(entityManager,accountId);
-            if(user==null){
-                return  null;
+            User user = userDao.retrieveUserById(entityManager, accountId);
+            if (user == null) {
+                return null;
             }
-            Group newGroup = new Group(groupName);
+            newGroup = new Group(groupName);
             newGroup.getUserList().add(user);
             newGroup.getAdminList().add(user);
             user.getGroupAdminList().add(newGroup);
-            //userDao.updateUser(entityManager,user);
             user.getGroupMemberList().add(newGroup);
-            groupDao.createGroup(entityManager,newGroup);
+            groupDao.createGroup(entityManager, newGroup);
 
-            //groupDao.updateGroup(newGroup,user);
-
-            return newGroup;
-        }   finally {
+        } finally {
             entityManager.getTransaction().commit();
         }
-
+        return new GroupViewObject(newGroup);
     }
 
-    public Group retrieveGroupByName(String groupName) {
+    public GroupViewObject retrieveGroupByName(String groupName) {
         EntityManager entityManager = emf.createEntityManager();
-
-            return groupDao.retrieveGroupByName(entityManager,groupName);
-
-
+        Group group = groupDao.retrieveGroupByName(entityManager, groupName);
+        return new GroupViewObject(group);
     }
 
-    public Group retrieveGroupById(Integer groupId) {
+    public GroupViewObject retrieveGroupById(Integer groupId) {
         EntityManager entityManager = emf.createEntityManager();
 
-        return groupDao.retrieveGroupById(entityManager,groupId);
+        Group group = groupDao.retrieveGroupById(entityManager, groupId);
+        return new GroupViewObject(group);
     }
 
-    public Group addMembersToGroup(Integer groupId, Integer accountId) {
+    public GroupViewObject addMembersToGroup(Integer groupId, Integer accountId) {
         EntityManager entityManager = emf.createEntityManager();
-        try{
+        Group group;
+        try {
             entityManager.getTransaction().begin();
-            User user = userDao.retrieveUserById(entityManager,accountId);
-            Group group = groupDao.retrieveGroupById(entityManager,groupId);
+            User user = userDao.retrieveUserById(entityManager, accountId);
+            group = groupDao.retrieveGroupById(entityManager, groupId);
             user.getGroupMemberList().add(group);
             group.getUserList().add(user);
+            groupDao.updateGroup(entityManager, group);
 
-            groupDao.updateGroup(entityManager,group);
-            return group;
-        }finally {
+        } finally {
             entityManager.getTransaction().commit();
         }
-
+        return new GroupViewObject(group);
     }
 
-    public Group addAdminToGroup(Integer groupId, Integer accountId) {
+    public GroupViewObject addAdminToGroup(Integer groupId, Integer accountId) {
         EntityManager entityManager = emf.createEntityManager();
-        try{
+        Group group;
+        try {
             entityManager.getTransaction().begin();
-        User user = userDao.retrieveUserById(entityManager,accountId);
-        Group group = groupDao.retrieveGroupById(entityManager,groupId);
-        group.getAdminList().add(user);
-        groupDao.updateGroup(entityManager,group);
-        return group;
-        }finally {
+            User user = userDao.retrieveUserById(entityManager, accountId);
+            group = groupDao.retrieveGroupById(entityManager, groupId);
+            if(!group.getUserList().contains(user)) {
+                group.getUserList().add(user);
+            }
+            group.getAdminList().add(user);
+            groupDao.updateGroup(entityManager, group);
+
+        } finally {
             entityManager.getTransaction().commit();
         }
+        return new GroupViewObject(group);
     }
 
     public boolean isAdminOfGroup(Integer groupId, Integer accountId) {
-        EntityManager entityManager = emf.createEntityManager();
-        User user = userDao.retrieveUserById(entityManager,accountId);
-        Group group = groupDao.retrieveGroupById(entityManager,groupId);
+        EntityManager em = emf.createEntityManager();
+        Group group;
+        User user;
+        try {
+            em.getTransaction().begin();
+            user = userDao.retrieveUserById(em, accountId);
+            group = groupDao.retrieveGroupById(em, groupId);
+        } finally {
+            em.getTransaction().commit();
+        }
+
         return group.getAdminList().contains(user);
     }
 }
