@@ -97,6 +97,7 @@ public class UserServiceRest {
     @ResponseBody
     ResponseEntity<String> logoutUser(@PathVariable("user") String user, HttpServletRequest request) {
 
+
         sessionApplicationService.invalidateSession(request.getSession());
 
         return new ResponseEntity<String>("INVALIDATED",
