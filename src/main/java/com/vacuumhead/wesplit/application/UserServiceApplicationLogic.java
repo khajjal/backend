@@ -81,7 +81,7 @@ public class UserServiceApplicationLogic implements IUserServiceApplicationLogic
         } finally {
             em.getTransaction().commit();
         }
-        if(userInfo == null)
+        if(userInfo == null || !userInfo.getPassword().equals(password))
             return null;
         return new UserViewObject(userInfo);
     }
