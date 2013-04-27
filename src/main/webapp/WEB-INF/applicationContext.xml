@@ -50,6 +50,7 @@
         <beans:constructor-arg name="userDao" ref="userDao"/>
     </beans:bean>
 
+
     <beans:bean id="groupApplicationService" class="com.vacuumhead.wesplit.application.GroupApplicationService">
         <beans:constructor-arg ref="groupDao"/>
         <beans:constructor-arg ref="userDao"/>
@@ -121,7 +122,7 @@
         <beans:property name="password" value="guest" />
         <beans:property name="virtualHost" value="/" />
         <beans:property name="port" value="5672" />
-    </beans:bean>                                                                                x`
+    </beans:bean>
 
     <!-- Spring AMQP Template -->
     <beans:bean id="rabbitTemplate"
