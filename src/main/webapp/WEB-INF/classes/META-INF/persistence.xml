@@ -15,9 +15,9 @@ http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
             <property name="hibernate.connection.driver_class"
                       value="com.mysql.jdbc.Driver"/>
             <property name="hibernate.connection.username"
-                      value="wesplit"/>
+                      value="root"/>
             <property name="hibernate.connection.password"
-                      value="wesplit"/>
+                      value="root"/>
             <property name="hibernate.connection.url"
                       value="jdbc:mysql://localhost:3306/wesplit_ddb"/>
             <property name="hibernate.dialect"

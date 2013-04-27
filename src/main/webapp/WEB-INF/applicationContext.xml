@@ -68,11 +68,17 @@
     <!-- AOP RELATED -->
 
     <beans:bean id="daoExecution" class="com.vacuumhead.wesplit.dao.SessionManager"/>
+    <beans:bean id="sendExecution" class="com.vacuumhead.wesplit.rabbit.MessageSender"/>
 
     <aop:config>
         <aop:aspect id="daoAspect" ref="daoExecution">
             <aop:pointcut id="pointCutBefore" expression="execution(* com.vacuumhead.wesplit.dao.*.*(..))"/>
             <aop:around method="daoExecution" pointcut-ref="pointCutBefore"/>
+        </aop:aspect>
+        <aop:aspect id="notificationAspect" ref="sendExecution">
+            <aop:pointcut  id="pointCutAfterReturn"
+                    expression="execution(* com.vacuumhead.wesplit.application.IBillApplicationService.createBill(..))"/>
+            <aop:after-returning method="send" pointcut-ref="pointCutAfterReturn" returning="retVal"/>
         </aop:aspect>
     </aop:config>
 
@@ -115,10 +121,10 @@
         <beans:property name="password" value="guest" />
         <beans:property name="virtualHost" value="/" />
         <beans:property name="port" value="5672" />
-    </beans:bean>
+    </beans:bean>                                                                                x`
 
     <!-- Spring AMQP Template -->
-    <beans:bean id="template"
+    <beans:bean id="rabbitTemplate"
         class="org.springframework.amqp.rabbit.core.RabbitTemplate">
         <beans:property name="connectionFactory" ref="rabbitConnFactory" />
         <beans:property name="routingKey" value="test.queue"/>
