@@ -16,11 +16,12 @@ public class MessageSender {
     @Autowired
     private RabbitTemplate rabbitTemplate;
     public void send(Object retVal){
+
         String messageToBeSent = "Test message";
         if (retVal.getClass()!=BillViewObject.class){
             System.out.println("wtf!");
         }
-       rabbitTemplate.convertAndSend( new Gson().toJson((BillViewObject)retVal));
+       rabbitTemplate.convertAndSend("exchange","topic1", new Gson().toJson((BillViewObject)retVal));
 
         System.out.println("Message '" +  new Gson().toJson((BillViewObject)retVal) + "' sent.");
     }
